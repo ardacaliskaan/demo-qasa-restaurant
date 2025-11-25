@@ -10,7 +10,7 @@ export async function GET(request) {
     const period = searchParams.get('period') || 'today'
     
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     // Tarih aralığı
     let start, end

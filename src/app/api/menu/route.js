@@ -7,8 +7,8 @@ export const runtime = 'nodejs';
 export async function GET(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+    const db = client.db('demo-qasa-restaurant')
+    console.log('🔗 [menu API] Database:', db.databaseName)
     const { searchParams } = new URL(request.url)
     
     // Query parameters

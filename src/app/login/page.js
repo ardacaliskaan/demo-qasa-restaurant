@@ -1,4 +1,4 @@
-// src/app/admin/login/page.js - Ayışığı KAFE ADVANCED LOGIN
+// src/app/admin/login/page.js - QASA KAFE ADVANCED LOGIN
 'use client'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -286,7 +286,7 @@ export default function LoginPage() {
                 <h1 className={`text-6xl font-black mb-4 ${
                   isDark ? 'text-white' : 'text-gray-900'
                 }`}>
-                  Ayışığı
+                  QASA
                   <br />
                   <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">
                     Kafe
@@ -422,7 +422,7 @@ export default function LoginPage() {
                   
                   <h2 className="text-3xl font-bold text-white mb-2">Hoş Geldiniz</h2>
                   <p className="text-white/90 text-sm font-medium">
-                    Ayışığı Kafe Admin Panel
+                    QASA Kafe Admin Panel
                   </p>
                 </div>
               </div>
@@ -651,7 +651,7 @@ export default function LoginPage() {
                     {' '}&copy; 2025
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
-                    Ayışığı Kafe QR Menu System v2.0
+                    QASA Kafe QR Menu System v2.0
                   </p>
                 </div>
               </div>

@@ -437,7 +437,7 @@ export default function TablesPage() {
         </head>
         <body>
           <div class="qr-container">
-            <div class="restaurant-name">Ayışığı Pasta Cafe</div>
+            <div class="restaurant-name">QASA Pasta Cafe</div>
             <h1 class="table-number">${table.number}</h1>
             <div class="qr-wrapper">
               <img src="${table.qrCode}" alt="QR Kod" />

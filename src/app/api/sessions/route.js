@@ -30,7 +30,7 @@ function getClientIp(request) {
 export async function POST(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     const body = await request.json()
     const { tableNumber, deviceInfo } = body
@@ -261,7 +261,7 @@ export async function POST(request) {
 export async function GET(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     const { searchParams } = new URL(request.url)
     const sessionId = searchParams.get('sessionId')
@@ -329,7 +329,7 @@ export async function GET(request) {
 export async function PUT(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     const body = await request.json()
     const { sessionId, action } = body

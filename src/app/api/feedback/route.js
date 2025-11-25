@@ -43,7 +43,7 @@ export async function GET(request) {
     const includeStats = searchParams.get('stats') === 'true'
     
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     // Query oluştur
     const query = {}
@@ -171,7 +171,7 @@ export async function POST(request) {
                      'unknown'
     
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     // Son 1 dakikadaki feedbackleri kontrol et
     const oneMinuteAgo = new Date(Date.now() - 60000)
@@ -236,7 +236,7 @@ export async function PUT(request) {
     }
     
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     const updateData = {
       updatedAt: new Date()
@@ -307,7 +307,7 @@ export async function DELETE(request) {
     }
     
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     const result = await db.collection('feedbacks').deleteOne({
       _id: new ObjectId(id)

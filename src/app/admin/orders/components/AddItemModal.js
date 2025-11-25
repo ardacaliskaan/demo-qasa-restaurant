@@ -128,33 +128,34 @@ export default function AddItemModal({
   }
 
   const handleAddItems = async () => {
-    if (cart.length === 0) {
-      toast.error('Sepet boş')
-      return
-    }
+  if (cart.length === 0) {
+    toast.error('Sepet boş')
+    return
+  }
 
-    try {
-      setAdding(true)
+  try {
+    setAdding(true)
 
-      // Her ürün için API çağrısı
-      for (const cartItem of cart) {
-        await fetch(apiPath('/api/orders'), {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: selectedTable.orders?.[0]?._id || selectedTable.orders?.[0]?.id,
-            action: 'addItem',
-            item: {
-              menuItemId: cartItem.id,
-              name: cartItem.name,
-              price: cartItem.price,
-              quantity: cartItem.quantity,
-              image: cartItem.image
-            }
-          })
-        })
-      }
+    // ✅ TEK API ÇAĞRISI - TÜM ÜRÜNLER BİRDEN
+    const response = await fetch(apiPath('/api/orders'), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: selectedTable.orders?.[0]?._id || selectedTable.orders?.[0]?.id,
+        action: 'addMultipleItems', // 🆕 YENİ ACTION
+        items: cart.map(cartItem => ({
+          menuItemId: cartItem.id,
+          name: cartItem.name,
+          price: cartItem.price,
+          quantity: cartItem.quantity,
+          image: cartItem.image
+        }))
+      })
+    })
 
+    const result = await response.json()
+
+    if (result.success) {
       toast.success(`${cart.length} ürün eklendi!`, {
         icon: '🎉',
         duration: 2000
@@ -163,13 +164,16 @@ export default function AddItemModal({
       setCart([])
       onComplete()
       onClose()
-    } catch (error) {
-      console.error('Add items error:', error)
-      toast.error('Ürün ekleme hatası')
-    } finally {
-      setAdding(false)
+    } else {
+      toast.error(result.error || 'Ürün ekleme hatası')
     }
+  } catch (error) {
+    console.error('Add items error:', error)
+    toast.error('Ürün ekleme hatası')
+  } finally {
+    setAdding(false)
   }
+}
 
   // Filter items
   const filteredItems = menuItems.filter(item => {

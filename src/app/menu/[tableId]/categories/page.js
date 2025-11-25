@@ -141,7 +141,7 @@ export default function CategoriesPage({ params }) {
               animate={{ scale: 1 }}
               className="text-2xl font-black bg-gradient-to-r from-emerald-700 via-teal-700 to-green-700 bg-clip-text text-transparent"
             >
-              Ayışığı CAFE
+              QASA CAFE
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}

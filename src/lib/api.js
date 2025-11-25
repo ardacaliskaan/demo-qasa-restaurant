@@ -30,7 +30,7 @@ export const apiPath = (path) => {
  */
 export const siteUrl = (path = '') => {
   // ✅ .env.local'den oku
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://ayisigicafe.com';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://restoran.ardacaliskan.com';
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   return `${baseUrl}${normalizedPath}`;
 };

@@ -7,8 +7,7 @@ import { createIngredient, validateIngredient } from '@/lib/models/ingredient'
 export async function GET() {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     const ingredients = await db.collection('ingredients')
       .find({})
       .sort({ category: 1, name: 1 })
@@ -38,8 +37,7 @@ export async function GET() {
 export async function POST(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     const data = await request.json()
     
     // Validasyon
@@ -84,8 +82,7 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     const data = await request.json()
     const { id, ...updateData } = data
     
@@ -131,8 +128,7 @@ export async function PUT(request) {
 export async function DELETE(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
     

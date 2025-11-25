@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Ayışığı Kitap Cafe QR Menu',
+  title: 'QASA Kitap Cafe QR Menu',
   description: 'Professional QR menu system for restaurants',
   icons: {
     icon: [

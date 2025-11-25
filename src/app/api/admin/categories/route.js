@@ -17,8 +17,7 @@ import {
 export async function GET(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     const { searchParams } = new URL(request.url)
     const includeInactive = searchParams.get('includeInactive') === 'true'
     
@@ -63,8 +62,7 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     const data = await request.json()
     
     // Validasyon
@@ -132,8 +130,7 @@ export async function POST(request) {
 export async function PUT(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     const data = await request.json()
     const { id, ...updateData } = data
     
@@ -261,8 +258,7 @@ export async function PUT(request) {
 export async function DELETE(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
     

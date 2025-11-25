@@ -73,7 +73,7 @@ export default function MenuFooter() {
   ]
 
   const socialLinks = [
-    { icon: Instagram, href: "https://www.instagram.com/Ayışığı.pastacafe", label: "Instagram" }
+    { icon: Instagram, href: "https://www.instagram.com/QASA.pastacafe", label: "Instagram" }
   ]
 
   const handleSubmitFeedback = async () => {
@@ -242,7 +242,7 @@ export default function MenuFooter() {
                 <Coffee className="w-6 h-6 text-white" />
               </div>
               <div className="text-emerald-800">
-                <p className="font-bold text-lg">Ayışığı CAFE</p>
+                <p className="font-bold text-lg">QASA CAFE</p>
               </div>
             </div>
 

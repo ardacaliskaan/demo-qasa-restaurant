@@ -48,7 +48,7 @@ export const verifyToken = async (request) => {
     
     // Database'den kullanıcıyı kontrol et (aktif mi, hala var mı)
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     const user = await db.collection('users')
       .findOne({ 
@@ -89,7 +89,7 @@ export const verifyToken = async (request) => {
 export const authenticateUser = async (username, password) => {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     // Kullanıcıyı bul
     const user = await db.collection('users').findOne({
@@ -173,7 +173,7 @@ export const clearAuthCookie = async () => {
 export const initializeDefaultAdmin = async () => {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     // Admin kullanıcısı var mı kontrol et
     const adminExists = await db.collection('users')

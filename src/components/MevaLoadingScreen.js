@@ -8,7 +8,7 @@ const MevaLoadingScreen = ({ onComplete, tableNumber }) => {
   const [isComplete, setIsComplete] = useState(false);
 
   const steps = [
-    { icon: Coffee, text: "Ayışığı Cafe'ye Hoş Geldiniz", duration: 1200 },
+    { icon: Coffee, text: "QASA Cafe'ye Hoş Geldiniz", duration: 1200 },
     { icon: Utensils, text: "Menümüz hazırlanıyor", duration: 1000 },
     { icon: ChefHat, text: `Masa ${tableNumber} için menü yükleniyor`, duration: 800 }
   ];
@@ -47,7 +47,7 @@ const MevaLoadingScreen = ({ onComplete, tableNumber }) => {
             transition={{ delay: 0.3, duration: 0.6 }}
             className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent"
           >
-            Ayışığı CAFE
+            QASA CAFE
           </motion.h1>
           <motion.p
             initial={{ y: 20, opacity: 0 }}
@@ -130,7 +130,7 @@ const MevaLoadingScreen = ({ onComplete, tableNumber }) => {
           ))}
         </motion.div>
 
-        {/* Ayışığı Cafe Tagline */}
+        {/* QASA Cafe Tagline */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

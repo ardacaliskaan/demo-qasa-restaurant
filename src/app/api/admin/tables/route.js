@@ -5,7 +5,7 @@ import clientPromise from '@/lib/mongodb'
 export async function GET(request) {
   try {
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     // 🆕 Query parametrelerini al
     const { searchParams } = new URL(request.url)
@@ -62,7 +62,7 @@ export async function POST(request) {
     }
 
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
 
     // Masa numarası unique kontrolü (string bazlı)
     const existingTable = await db.collection('tables').findOne({ number: number.trim() })
@@ -114,7 +114,7 @@ export async function PUT(request) {
     }
 
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     const { ObjectId } = require('mongodb')
 
     // Eğer masa numarası değişiyorsa, unique kontrolü yap (string bazlı)
@@ -181,7 +181,7 @@ export async function DELETE(request) {
     }
 
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     const { ObjectId } = require('mongodb')
 
     const table = await db.collection('tables').findOne({ _id: new ObjectId(id) })

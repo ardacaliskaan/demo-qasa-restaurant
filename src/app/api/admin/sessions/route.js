@@ -23,7 +23,7 @@ export async function GET(request) {
     const tableNumber = searchParams.get('tableNumber')
     
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     // Filter oluştur
     const filter = {}
@@ -134,7 +134,7 @@ export async function PUT(request) {
     }
     
     const client = await clientPromise
-    const db = client.db('restaurant-qr')
+    const db = client.db('demo-qasa-restaurant')
     
     // Session'ı bul
     const session = await db.collection('sessions')

@@ -3,7 +3,7 @@
 const { MongoClient } = require('mongodb')
 const bcrypt = require('bcryptjs')
 
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/restaurant-qr'
+const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/demo-qasa-restaurant'
 
 async function seedDatabase() {
   const client = new MongoClient(uri)
@@ -12,14 +12,13 @@ async function seedDatabase() {
     await client.connect()
     console.log('✅ MongoDB bağlantısı başarılı!')
     
-    const db = client.db('restaurant-qr')
-    
+const db = client.db('demo-qasa-restaurant')    
     // Sadece admin kullanıcı
     const adminUser = {
       name: 'Admin',
       username: 'admin',
       email: 'admin@ayisigicafe.com',
-      password: bcrypt.hashSync('ayisigi123', 12),
+      password: bcrypt.hashSync('admin123', 12),
       role: 'admin',
       phone: null,
       avatar: null,

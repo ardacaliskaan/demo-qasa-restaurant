@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb'
 
-const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/restaurant-qr'
+const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/demo-qasa-restaurant'
+console.log('🔗 [mongodb.js] URI:', uri)  // BU SATIRI EKLE
+
 const options = {}
 
 let client

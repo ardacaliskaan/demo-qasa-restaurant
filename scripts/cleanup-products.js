@@ -1,13 +1,12 @@
-// scripts/cleanup-products.js
-// Sadece menu (ürünler) collection'ını temizler
+// scripts/cleanup-demo.js
+// Demo database'ini temizler (sadece menu, categories, ingredients, tables, orders)
 
 const { MongoClient } = require('mongodb')
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017'
-const DB_NAME = 'restaurant-qr'
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/demo-qasa-restaurant'
 
-async function cleanupProducts() {
-  console.log('🧹 ÜRÜN TEMİZLEME BAŞLIYOR...\n')
+async function cleanupDemo() {
+  console.log('🧹 DEMO DATABASE TEMİZLEME BAŞLIYOR...\n')
   
   const client = new MongoClient(MONGODB_URI)
   
@@ -15,31 +14,34 @@ async function cleanupProducts() {
     await client.connect()
     console.log('✅ MongoDB bağlantısı başarılı!\n')
     
-    const db = client.db(DB_NAME)
+    const db = client.db()
     
-    // Önce mevcut ürün sayısını göster
-    const productCount = await db.collection('menu').countDocuments()
-    console.log(`📦 Mevcut ürün sayısı: ${productCount}`)
+    // Silinecek collections
+    const collectionsToClean = ['menu', 'categories', 'ingredients', 'tables', 'orders']
     
-    if (productCount === 0) {
-      console.log('ℹ️  Silinecek ürün yok!')
-      return
+    console.log('📊 Mevcut durumu kontrol ediliyor...\n')
+    
+    for (const collectionName of collectionsToClean) {
+      const count = await db.collection(collectionName).countDocuments()
+      console.log(`  ${collectionName}: ${count} kayıt`)
     }
     
-    // Onay iste
-    console.log('\n⚠️  TÜM ÜRÜNLER SİLİNECEK!')
-    console.log('⚠️  Bu işlem geri alınamaz!\n')
+    console.log('\n⚠️  TÜM VERİLER SİLİNECEK!')
+    console.log('⚠️  Yazıcı ayarları (printer_*) korunacak!\n')
+    console.log('⏳ 3 saniye içinde iptal etmek için Ctrl+C basın...\n')
     
-    // 5 saniye bekle (manuel onay için)
-    console.log('⏳ 5 saniye içinde iptal etmek için Ctrl+C basın...')
-    await new Promise(resolve => setTimeout(resolve, 5000))
+    await new Promise(resolve => setTimeout(resolve, 3000))
     
-    // Ürünleri sil
-    console.log('\n🗑️  Ürünler siliniyor...')
-    const result = await db.collection('menu').deleteMany({})
+    // Temizleme
+    console.log('🗑️  Temizleme başlıyor...\n')
     
-    console.log(`\n✅ ${result.deletedCount} ürün başarıyla silindi!`)
-    console.log('✨ Menu collection temiz!')
+    for (const collectionName of collectionsToClean) {
+      const result = await db.collection(collectionName).deleteMany({})
+      console.log(`✅ ${collectionName}: ${result.deletedCount} kayıt silindi`)
+    }
+    
+    console.log('\n✨ Database temizlendi!')
+    console.log('ℹ️  printer_configs, printer_devices, print_logs korundu')
     
   } catch (error) {
     console.error('❌ Hata:', error.message)
@@ -50,10 +52,9 @@ async function cleanupProducts() {
   }
 }
 
-// Script'i çalıştır
-cleanupProducts()
+cleanupDemo()
   .then(() => {
-    console.log('\n🎉 İşlem tamamlandı!')
+    console.log('\n🎉 Temizlik tamamlandı!')
     process.exit(0)
   })
   .catch(err => {
