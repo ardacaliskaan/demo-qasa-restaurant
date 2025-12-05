@@ -9,7 +9,7 @@ import {
 import toast from 'react-hot-toast'
 import { apiPath } from '@/lib/api'
 import TransferConfirmModal from './TransferConfirmModal'
-
+import Image from 'next/image'
 export default function TransferTableModal({
   show,
   sourceTable,
@@ -158,12 +158,25 @@ export default function TransferTableModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="p-6 bg-gradient-to-r from-purple-500 to-indigo-600 text-white flex-shrink-0">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-                  <ArrowRightLeft className="w-8 h-8" />
-                </div>
+          <div className="p-6 bg-gradient-to-r from-qasa via-qasa-light to-qasa-accent text-white flex-shrink-0">
+  <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center gap-3">
+      {/* 🎨 QASA LOGO */}
+      <motion.div
+        whileHover={{ scale: 1.05, rotate: 3 }}
+        className="relative"
+      >
+        <div className="absolute inset-0 bg-white/20 blur-xl rounded-full" />
+        <div className="relative bg-white/10 backdrop-blur-md p-3 rounded-2xl border-2 border-white/30">
+          <Image
+            src="/qasa.png"
+            alt="QASA"
+            width={90}
+            height={27}
+            className="drop-shadow-lg"
+          />
+        </div>
+      </motion.div>
                 <div>
                   <h2 className="text-2xl font-bold">Masa Taşı</h2>
                   <p className="text-sm opacity-90 mt-1">
@@ -255,10 +268,10 @@ export default function TransferTableModal({
                     >
                       <div className="flex items-center justify-between mb-2">
                         <div className={`p-2 rounded-lg ${
-                          table.isEmpty ? 'bg-green-100' : 'bg-amber-100'
+                          table.isEmpty ? 'bg-green-100' : 'bg-qasa-accent/20'
                         }`}>
                           <Users className={`w-4 h-4 ${
-                            table.isEmpty ? 'text-green-600' : 'text-amber-600'
+                            table.isEmpty ? 'text-green-600' : 'text-qasa-accent'
                           }`} />
                         </div>
                         {selectedTargetTable?._id === table._id && (
@@ -293,7 +306,7 @@ export default function TransferTableModal({
                           ? 'bg-red-100 text-red-600'
                           : table.isEmpty
                           ? 'bg-green-100 text-green-600'
-                          : 'bg-amber-100 text-amber-600'
+                          : 'bg-qasa-accent/20 text-qasa-accent'
                       }`}>
                         {table.status === 'maintenance' ? 'Bakımda' : table.isEmpty ? 'Boş' : 'Dolu'}
                       </div>

@@ -26,7 +26,7 @@ const CATEGORY_ICONS = {
 
 const CATEGORY_COLORS = {
   'service': 'from-blue-500 to-indigo-600',
-  'food': 'from-amber-500 to-orange-600',
+  'food': 'from-qasa to-qasa-accent',
   'staff': 'from-purple-500 to-pink-600',
   'other': 'from-gray-500 to-gray-700'
 }
@@ -209,7 +209,7 @@ export default function FeedbackPage() {
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <MessageSquare className="w-8 h-8 text-amber-600" />
+            <MessageSquare className="w-8 h-8 text-qasa-accent" />
             Müşteri Geri Bildirimleri
             {refreshing && <RefreshCw className="w-5 h-5 text-blue-500 animate-spin" />}
           </h1>
@@ -276,7 +276,7 @@ export default function FeedbackPage() {
           </motion.div>
 
           {/* Average Rating */}
-          <motion.div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl p-4 text-white">
+          <motion.div className="bg-gradient-to-br from-qasa via-qasa-accent to-qasaqasarounded-xl p-4 text-white">
             <Star className="w-6 h-6 opacity-80 mb-2" />
             <p className="text-2xl font-bold">{statistics.averageRating}</p>
             <p className="text-sm opacity-90">Ort. Puan</p>
@@ -406,7 +406,7 @@ export default function FeedbackPage() {
                         />
                       ))}
                     </div>
-                    <span className="text-sm font-bold text-amber-600 ml-auto">
+                    <span className="text-sm font-bold text-qasa-accent ml-auto">
                       {feedback.rating}/5
                     </span>
                   </div>
@@ -528,7 +528,7 @@ export default function FeedbackPage() {
                           </div>
                         </div>
                       </div>
-                      <p className="text-3xl font-bold text-amber-600">
+                      <p className="text-3xl font-bold text-qasa-accent">
                         {selectedFeedback.rating}/5
                       </p>
                     </div>
@@ -571,7 +571,7 @@ export default function FeedbackPage() {
                         onClick={() => updateStatus(selectedFeedback.id, status, adminNotes)}
                         className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all ${
                           selectedFeedback.status === status
-                            ? 'bg-amber-500 text-white shadow-lg'
+                            ? 'bg-qasa-accent text-white shadow-lg'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                       >

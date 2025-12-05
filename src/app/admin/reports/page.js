@@ -156,7 +156,7 @@ export default function ReportsPage() {
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <BarChart3 className="w-8 h-8 text-amber-600" />
+            <BarChart3 className="w-8 h-8 text-qasa-accent" />
             Raporlar & Analiz
           </h1>
           <p className="text-gray-600 mt-1">Detaylı satış ve performans raporları</p>
@@ -194,7 +194,7 @@ export default function ReportsPage() {
               onClick={() => setPeriod(p.value)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
                 period === p.value
-                  ? 'bg-amber-500 text-white shadow-lg'
+                  ? 'bg-qasa-accent text-white shadow-lg'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
@@ -207,7 +207,7 @@ export default function ReportsPage() {
             onClick={() => setPeriod('custom')}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
               period === 'custom'
-                ? 'bg-amber-500 text-white shadow-lg'
+                ? 'bg-qasa-accent text-white shadow-lg'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -233,7 +233,7 @@ export default function ReportsPage() {
             />
             <button
               onClick={() => loadReports()}
-              className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-all font-medium"
+              className="px-4 py-2 bg-qasa-accent text-white rounded-lg hover:bg-amber-600 transition-all font-medium"
             >
               Uygula
             </button>
@@ -249,7 +249,7 @@ export default function ReportsPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 text-white shadow-lg"
+              className="bg-gradient-to-br from-qasa via-qasa-accent to-qasarounded-2xl p-6 text-white shadow-lg"
             >
               <div className="flex items-center justify-between mb-2">
                 <DollarSign className="w-8 h-8 opacity-80" />
@@ -344,7 +344,7 @@ export default function ReportsPage() {
               className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200"
             >
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-amber-600" />
+                <TrendingUp className="w-5 h-5 text-qasa-accent" />
                 Günlük Ciro Trendi
               </h3>
               <ResponsiveContainer width="100%" height={300}>
@@ -450,14 +450,14 @@ export default function ReportsPage() {
               className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200"
             >
               <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Package className="w-5 h-5 text-amber-600" />
+                <Package className="w-5 h-5 text-qasa-accent" />
                 En Çok Satan Ürünler
               </h3>
               <div className="space-y-3">
                 {data.topProducts.map((product, index) => (
                   <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center font-bold">
+                      <div className="w-8 h-8 bg-qasa-accent/20 text-qasa-accent rounded-full flex items-center justify-center font-bold">
                         {index + 1}
                       </div>
                       <div>
@@ -465,7 +465,7 @@ export default function ReportsPage() {
                         <p className="text-sm text-gray-600">{product.quantity} adet</p>
                       </div>
                     </div>
-                    <p className="font-bold text-amber-600">{formatCurrency(product.revenue)}</p>
+                    <p className="font-bold text-qasa-accent">{formatCurrency(product.revenue)}</p>
                   </div>
                 ))}
               </div>

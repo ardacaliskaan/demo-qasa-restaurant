@@ -1,10 +1,11 @@
-// src/app/admin/layout.js - Real Notifications Version (Fixed)
+// src/app/admin/layout.js - QASA BRANDED VERSION
 
 'use client'
 
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion'
 import { apiPath } from '@/lib/api'
 
@@ -26,14 +27,14 @@ import {
   Moon,
   Sun,
   ChevronDown,
-  ChevronLeft,  // 🆕 Collapse icon
-  ChevronRight, // 🆕 Expand icon
+  ChevronLeft,
+  ChevronRight,
   User,
   HelpCircle,
-  BarChart3,  // 🆕 EKLE
+  BarChart3,
   Activity,
   Clock,
-  MessageSquare,  // 🆕 EKLE
+  MessageSquare,
   CheckCircle
 } from 'lucide-react'
 
@@ -43,30 +44,28 @@ const menuItems = [
   { href: '/admin/ingredients', icon: ChefHat, label: 'Malzemeler', badge: null },
   { href: '/admin/menu', icon: MenuIcon, label: 'Menü', badge: null },
   { href: '/admin/tables', icon: Users, label: 'Masalar', badge: null },
-  { href: '/admin/reports', icon: BarChart3, label: 'Raporlar', badge: null }, // 🆕 EKLE
+  { href: '/admin/reports', icon: BarChart3, label: 'Raporlar', badge: null },
   { href: '/admin/orders', icon: ShoppingCart, label: 'Siparişler', badge: 'hot' },
   { href: '/admin/sessions', icon: Wifi, label: 'Oturumlar', badge: null },
-  { href: '/admin/feedback', icon: MessageSquare, label: 'Geri Bildirimler', badge: null }, // 🆕 EKLE
+  { href: '/admin/feedback', icon: MessageSquare, label: 'Geri Bildirimler', badge: null },
   { href: '/admin/qr', icon: QrCode, label: 'QR Kodlar', badge: null },
   { href: '/admin/users', icon: UserCog, label: 'Kullanıcılar', badge: null },
 ]
 
 export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false) // 🆕 Collapsible state
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
   
-  // 🆕 REAL NOTIFICATIONS STATE
   const [notifications, setNotifications] = useState(0)
   const [notificationsList, setNotificationsList] = useState([])
   const [recentOrders, setRecentOrders] = useState([])
   const previousOrderCountRef = useRef(0)
 
-  // Debug: notifications değişikliklerini logla
   useEffect(() => {
     console.log('🔔 [LAYOUT] Notifications state changed:', notifications)
   }, [notifications])
@@ -74,11 +73,9 @@ export default function AdminLayout({ children }) {
   const router = useRouter()
   const pathname = usePathname()
 
-  // Swipe to close gesture
   const x = useMotionValue(0)
   const opacity = useTransform(x, [-280, 0], [0, 1])
 
-  // Screen size detection
   useEffect(() => {
     const checkScreenSize = () => {
       const mobile = window.innerWidth < 1024
@@ -93,9 +90,7 @@ export default function AdminLayout({ children }) {
     return () => window.removeEventListener('resize', checkScreenSize)
   }, [])
 
-  // 🆕 LOAD/SAVE COLLAPSED STATE
   useEffect(() => {
-    // localStorage'dan collapsed durumu yükle
     const saved = localStorage.getItem('sidebarCollapsed')
     if (saved !== null) {
       setSidebarCollapsed(saved === 'true')
@@ -103,18 +98,15 @@ export default function AdminLayout({ children }) {
   }, [])
 
   useEffect(() => {
-    // Collapsed durumu localStorage'a kaydet
     localStorage.setItem('sidebarCollapsed', sidebarCollapsed.toString())
   }, [sidebarCollapsed])
 
-  // 🆕 LOAD REAL NOTIFICATIONS
   const loadNotifications = useCallback(async () => {
     try {
       console.log('🔍 [LAYOUT] Loading notifications...')
       
-      // Aktif (tamamlanmamış) siparişleri çek
       const params = new URLSearchParams({
-        groupByTable: 'true',  // ✅ BU ÖNEMLİ! originalOrders için gerekli
+        groupByTable: 'true',
         excludeCompleted: 'true',
         sortBy: 'createdAt',
         sortOrder: 'desc',
@@ -131,7 +123,6 @@ export default function AdminLayout({ children }) {
       })
 
       if (data.success) {
-        // ✅ FALLBACK: originalOrders yoksa orders kullan
         const orders = data.originalOrders || data.orders || []
         setRecentOrders(orders)
 
@@ -142,7 +133,6 @@ export default function AdminLayout({ children }) {
           sampleOrder: orders[0]
         })
 
-        // Yeni sipariş kontrolü
         const currentCount = orders.length
         const previousCount = previousOrderCountRef.current
 
@@ -153,7 +143,6 @@ export default function AdminLayout({ children }) {
           hasNewOrders: currentCount > previousCount
         })
 
-        // İlk yükleme değilse ve artış varsa
         if (previousCount > 0 && currentCount > previousCount) {
           const newOrdersCount = currentCount - previousCount
           console.log('✅ [LAYOUT] NEW ORDERS DETECTED!', newOrdersCount)
@@ -164,7 +153,6 @@ export default function AdminLayout({ children }) {
             return newVal
           })
           
-          // Yeni siparişleri bildirim listesine ekle
           const newOrders = orders.slice(0, newOrdersCount)
           const newNotifications = newOrders.map(order => ({
             id: order._id,
@@ -184,11 +172,9 @@ export default function AdminLayout({ children }) {
           console.log('ℹ️ [LAYOUT] No new orders (first load or no increase)')
         }
 
-        // Güncel sayıyı kaydet
         console.log('💾 [LAYOUT] Saving count to ref:', currentCount)
         previousOrderCountRef.current = currentCount
         
-        // localStorage'a kaydet
         try {
           localStorage.setItem('adminLastOrderCount', currentCount.toString())
           console.log('💾 [LAYOUT] Saved to localStorage:', currentCount)
@@ -201,7 +187,6 @@ export default function AdminLayout({ children }) {
     }
   }, [])
 
-  // 🆕 TIME AGO HELPER
   const getTimeAgo = (date) => {
     const seconds = Math.floor((new Date() - new Date(date)) / 1000)
     if (seconds < 60) return 'Az önce'
@@ -212,7 +197,6 @@ export default function AdminLayout({ children }) {
     return `${Math.floor(hours / 24)} gün önce`
   }
 
-  // 🆕 AUTO-REFRESH NOTIFICATIONS (15 saniye)
   useEffect(() => {
     console.log('🔄 [LAYOUT] Setting up auto-refresh (15s interval)')
     loadNotifications()
@@ -226,7 +210,6 @@ export default function AdminLayout({ children }) {
     }
   }, [loadNotifications])
 
-  // 🆕 İLK YÜKLEME - localStorage'dan son sayıyı al
   useEffect(() => {
     try {
       const savedCount = localStorage.getItem('adminLastOrderCount')
@@ -243,13 +226,11 @@ export default function AdminLayout({ children }) {
     }
   }, [])
 
-  // 🆕 BİLDİRİM TIKLANDIĞINDA
   const handleNotificationClick = useCallback((notif) => {
     if (notif.type === 'order' && notif.orderId) {
       router.push('/admin/orders')
       setNotificationOpen(false)
       
-      // Bu bildirimi okundu işaretle
       setNotificationsList(prev => 
         prev.map(n => n.id === notif.id ? { ...n, unread: false } : n)
       )
@@ -257,13 +238,11 @@ export default function AdminLayout({ children }) {
     }
   }, [router])
 
-  // 🆕 TÜM BİLDİRİMLERİ OKUNDU İŞARETLE
   const markAllAsRead = useCallback(() => {
     setNotificationsList(prev => prev.map(n => ({ ...n, unread: false })))
     setNotifications(0)
   }, [])
 
-  // Close sidebar on route change
   useEffect(() => {
     setSidebarOpen(false)
     setProfileMenuOpen(false)
@@ -271,7 +250,6 @@ export default function AdminLayout({ children }) {
     setSearchOpen(false)
   }, [pathname])
 
-  // Close menus on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest('.profile-menu') && !e.target.closest('.profile-button')) {
@@ -286,7 +264,6 @@ export default function AdminLayout({ children }) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -318,7 +295,6 @@ export default function AdminLayout({ children }) {
     setSidebarOpen(prev => !prev)
   }, [])
 
-  // 🆕 TOGGLE COLLAPSE
   const toggleCollapse = useCallback(() => {
     setSidebarCollapsed(prev => !prev)
   }, [])
@@ -327,7 +303,6 @@ export default function AdminLayout({ children }) {
     return menuItems.find(item => item.href === pathname)?.label || 'Admin Panel'
   }, [pathname])
 
-  // 🆕 STATUS ICON HELPER
   const getStatusIcon = (status) => {
     switch (status) {
       case 'pending': return Clock
@@ -381,35 +356,44 @@ export default function AdminLayout({ children }) {
               flex flex-col shadow-2xl
             `}
           >
-            {/* Logo Section */}
-            <div className={`h-16 flex items-center ${sidebarCollapsed && !isMobile ? 'justify-center' : 'justify-between'} px-6 border-b border-gray-100`}>
-              <motion.div 
-                className={`flex items-center gap-3 ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <ChefHat className="w-6 h-6 text-white" />
-                </div>
-                {!(sidebarCollapsed && !isMobile) && (
-                  <div>
-                    <h1 className="font-bold text-gray-900 text-lg">Restaurant</h1>
-                    <p className="text-xs text-gray-500">Admin Panel</p>
-                  </div>
-                )}
-              </motion.div>
-              
-              {isMobile && (
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setSidebarOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
-                >
-                  <X className="w-5 h-5 text-gray-600" />
-                </motion.button>
-              )}
-            </div>
+            {/* Logo Section - QASA BRANDED (Bigger & Centered) */}
+<div className={`h-20 flex items-center justify-center ${!sidebarCollapsed || isMobile ? 'px-4' : 'px-2'} border-b border-gray-100 relative`}>
+  <motion.div 
+    className="flex items-center justify-center"
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    {sidebarCollapsed && !isMobile ? (
+      // Collapsed: Büyük "Q" harfi
+      <div className="w-12 h-12 bg-gradient-to-br from-qasa to-qasa-accent rounded-xl flex items-center justify-center shadow-lg">
+        <span className="text-white font-black text-2xl">Q</span>
+      </div>
+    ) : (
+      // Expanded: Daha büyük QASA Logo
+      <Image
+        src="/qasa.png"
+        alt="QASA"
+        width={150}
+        height={45}
+        className="drop-shadow-2xl"
+        priority
+      />
+    )}
+  </motion.div>
+  
+  {/* Mobile Close Button - Absolute Positioned */}
+  {isMobile && (
+    <motion.button
+      whileTap={{ scale: 0.9 }}
+      onClick={() => setSidebarOpen(false)}
+      className="absolute right-4 p-2 hover:bg-gray-100 rounded-xl transition-colors"
+    >
+      <X className="w-5 h-5 text-gray-600" />
+    </motion.button>
+  )}
+</div>
 
-            {/* Navigation */}
+            {/* Navigation - CLEAN HOVER */}
             <nav className="flex-1 overflow-y-auto p-4 space-y-1">
               {menuItems.map((item) => {
                 const isActive = pathname === item.href
@@ -425,12 +409,12 @@ export default function AdminLayout({ children }) {
                         flex items-center gap-3 ${sidebarCollapsed && !isMobile ? 'justify-center' : ''} px-4 py-3 rounded-xl
                         transition-all duration-200 relative group
                         ${isActive 
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/30' 
+                          ? 'bg-qasa-accent text-white shadow-lg shadow-qasa-accent/30' 
                           : 'text-gray-700 hover:bg-gray-100'
                         }
                       `}
                     >
-                      <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-600 group-hover:text-amber-600'}`} />
+                      <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-600 group-hover:text-qasa-accent'}`} />
                       {!(sidebarCollapsed && !isMobile) && (
                         <>
                           <span className="font-medium flex-1">{item.label}</span>
@@ -447,15 +431,8 @@ export default function AdminLayout({ children }) {
                         </>
                       )}
 
-                      {/* Tooltip for collapsed mode */}
                       {sidebarCollapsed && !isMobile && item.badge === 'hot' && (
                         <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-                      )}                      {isActive && (
-                        <motion.div
-                          layoutId="activeTab"
-                          className="absolute inset-0 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl -z-10"
-                          transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                        />
                       )}
                     </motion.div>
                   </Link>
@@ -465,29 +442,27 @@ export default function AdminLayout({ children }) {
 
             {/* User Section & Collapse Toggle */}
             <div className="p-4 border-t border-gray-100 space-y-2">
-              {/* Collapse Toggle Button - Desktop Only */}
               {!isMobile && (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={toggleCollapse}
                   className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors group"
-                  title={sidebarCollapsed ? 'Sidebar\'ı Genişlet' : 'Sidebar\'ı Daralt'}
+                  title={sidebarCollapsed ? 'Sidebar&apos;ı Genişlet' : 'Sidebar&apos;ı Daralt'}
                 >
                   {sidebarCollapsed ? (
-                    <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-amber-600" />
+                    <ChevronRight className="w-5 h-5 text-gray-600 group-hover:text-qasa-accent" />
                   ) : (
                     <>
-                      <ChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-amber-600" />
-                      <span className="text-sm font-medium text-gray-600 group-hover:text-amber-600">Daralt</span>
+                      <ChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-qasa-accent" />
+                      <span className="text-sm font-medium text-gray-600 group-hover:text-qasa-accent">Daralt</span>
                     </>
                   )}
                 </motion.button>
               )}
               
-              {/* User Info */}
               <div className={`flex items-center gap-3 p-3 bg-gray-50 rounded-xl ${sidebarCollapsed && !isMobile ? 'justify-center' : ''}`}>
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-gradient-to-br from-qasa to-qasa-accent rounded-xl flex items-center justify-center flex-shrink-0">
                   <User className="w-5 h-5 text-white" />
                 </div>
                 {!(sidebarCollapsed && !isMobile) && (
@@ -522,7 +497,6 @@ export default function AdminLayout({ children }) {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2">
-            {/* Search */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setSearchOpen(true)}
@@ -533,7 +507,6 @@ export default function AdminLayout({ children }) {
               <kbd className="px-2 py-0.5 bg-white rounded text-xs font-mono">⌘K</kbd>
             </motion.button>
 
-            {/* Dark Mode Toggle */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setDarkMode(!darkMode)}
@@ -617,7 +590,7 @@ export default function AdminLayout({ children }) {
                                   <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
                                 )}
                                 <div className="flex-shrink-0">
-                                  <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
+                                  <div className="w-10 h-10 bg-gradient-to-br from-qasa to-qasa-accent rounded-xl flex items-center justify-center">
                                     <StatusIcon className="w-5 h-5 text-white" />
                                   </div>
                                 </div>
@@ -654,7 +627,7 @@ export default function AdminLayout({ children }) {
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                 className="profile-button flex items-center gap-2 p-2 hover:bg-gray-100 rounded-xl transition-colors"
               >
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-br from-qasa to-qasa-accent rounded-lg flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-600 hidden sm:block" />

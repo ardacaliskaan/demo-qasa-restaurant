@@ -1,5 +1,5 @@
-// src/app/api/orders/route.js - FIXED VERSION
-// updateItemPartialPaid case'i doğru yere konuldu
+// src/app/api/orders/route.js - FULL VERSION
+// Yazıcı entegrasyonu + Sepet ekleme özellikleri (Temiz versiyon)
 
 import { NextResponse } from 'next/server'
 import clientPromise from '@/lib/mongodb'
@@ -546,38 +546,41 @@ export async function POST(request) {
         }
       )
     }
-    // 🖨️ YAZICI ENTEGRASYONU
-const createdOrder = await db.collection('orders').findOne({ 
-  _id: result.insertedId 
-})
- // ✅ DEBUG SATIRLARI EKLE (545. SATIRDAN SONRA)
+    
+    // 🖨️ YAZICI ENTEGRASYONU - YENİ SİPARİŞ OLUŞTURULDUĞUNDA
+    const createdOrder = await db.collection('orders').findOne({ 
+      _id: result.insertedId 
+    })
+    
     console.log('🔍 [DEBUG] typeof global.wsClients:', typeof global.wsClients)
     console.log('🔍 [DEBUG] wsClients size:', global.wsClients?.size || 0)
     console.log('🔍 [DEBUG] wsClients var mı?', !!global.wsClients)
-if (global.wsClients && global.wsClients.size > 0) {
-  const printerMessage = JSON.stringify({
-    type: 'NEW_ORDER',
-    timestamp: new Date().toISOString(),
-    data: {
-      orderId: createdOrder._id.toString(),
-      orderNumber: createdOrder.orderNumber,
-      tableNumber: createdOrder.tableNumber,
-      tableId: createdOrder.tableId,
-      items: createdOrder.items,
-      totalAmount: createdOrder.totalAmount,
-      customerNotes: createdOrder.customerNotes,
-      createdAt: createdOrder.createdAt,
-    },
-  })
-  
-  console.log('🖨️ Sending order to printer devices')
-  
-  global.wsClients.forEach(ws => {
-    if (ws.readyState === 1) {
-      ws.send(printerMessage)
+    
+    if (global.wsClients && global.wsClients.size > 0) {
+      const printerMessage = JSON.stringify({
+        type: 'NEW_ORDER',
+        timestamp: new Date().toISOString(),
+        data: {
+          orderId: createdOrder._id.toString(),
+          orderNumber: createdOrder.orderNumber,
+          tableNumber: createdOrder.tableNumber,
+          tableId: createdOrder.tableId,
+          items: createdOrder.items,
+          totalAmount: createdOrder.totalAmount,
+          customerNotes: createdOrder.customerNotes,
+          createdAt: createdOrder.createdAt,
+        },
+      })
+      
+      console.log('🖨️ [NEW_ORDER] Sending order to printer devices')
+      
+      global.wsClients.forEach(ws => {
+        if (ws.readyState === 1) {
+          ws.send(printerMessage)
+        }
+      })
     }
-  })
-}
+    
     return NextResponse.json({
       success: true,
       id: result.insertedId.toString(),
@@ -706,7 +709,7 @@ export async function PUT(request) {
     }
     
     // ============================================
-    // 2. TRANSFER TABLE ACTION - YENİ
+    // 2. TRANSFER TABLE ACTION
     // ============================================
     if (action === 'transferTable') {
       const { sourceTableNumber, targetTableNumber } = updateData
@@ -726,7 +729,6 @@ export async function PUT(request) {
       }
       
       try {
-        // Kaynak masadaki aktif siparişleri bul
         const sourceOrders = await db.collection('orders').find({
           $or: [
             { tableNumber: sourceTableNumber.toString() },
@@ -746,7 +748,6 @@ export async function PUT(request) {
         
         console.log(`📦 [TRANSFER] ${sourceOrders.length} sipariş taşınacak: ${sourceTableNumber} → ${targetTableNumber}`)
         
-        // Siparişlerin tableNumber ve tableId'lerini güncelle
         const updateResult = await db.collection('orders').updateMany(
           {
             $or: [
@@ -768,9 +769,7 @@ export async function PUT(request) {
         
         console.log(`✅ [TRANSFER] ${updateResult.modifiedCount} sipariş güncellendi`)
         
-        // Masaların durumlarını güncelle
         try {
-          // Kaynak masayı boş yap
           await db.collection('tables').updateOne(
             { 
               $or: [
@@ -786,7 +785,6 @@ export async function PUT(request) {
             }
           )
           
-          // Hedef masayı dolu yap
           await db.collection('tables').updateOne(
             { 
               $or: [
@@ -952,253 +950,183 @@ export async function PUT(request) {
         }
         break
         
-case 'addItem': {  // ✅ { EKLE
-  const { item: addItemData } = updateData
-  
-  if (!addItemData) {
-    return NextResponse.json(
-      { success: false, error: 'Ürün bilgisi gerekli' },
-      { status: 400 }
-    )
-  }
-  
-  if (!addItemData.menuItemId || !addItemData.name || !addItemData.price || !addItemData.quantity) {
-    return NextResponse.json(
-      { success: false, error: 'Ürün bilgileri eksik (menuItemId, name, price, quantity gerekli)' },
-      { status: 400 }
-    )
-  }
-  
-  if (addItemData.quantity < 1 || addItemData.quantity > 99) {
-    return NextResponse.json(
-      { success: false, error: 'Ürün miktarı 1-99 arasında olmalı' },
-      { status: 400 }
-    )
-  }
-  
-  const newItem = {
-    menuItemId: addItemData.menuItemId,
-    name: addItemData.name,
-    price: parseFloat(addItemData.price),
-    quantity: parseInt(addItemData.quantity),
-    status: 'pending',
-    addedAt: new Date(),
-    statusUpdatedAt: new Date()
-  }
-  
-  if (addItemData.notes) newItem.notes = addItemData.notes
-  if (addItemData.image) newItem.image = addItemData.image
-  if (addItemData.customizations) newItem.customizations = addItemData.customizations
-  
-  const itemTotal = newItem.price * newItem.quantity
-  const newTotalAmount = (existingOrder.totalAmount || 0) + itemTotal
-  
-  updateFields = {
-    items: [...existingOrder.items, newItem],
-    totalAmount: newTotalAmount,
-    updatedAt: new Date()
-  }
-  
-  console.log(`➕ Adding item to order ${id}:`, {
-    itemName: newItem.name,
-    quantity: newItem.quantity,
-    price: newItem.price,
-    itemTotal,
-    newTotalAmount
-  })
-  
-  // 🖨️ YAZICI ENTEGRASYONU - ÜRÜN EKLENDİĞİNDE
-  if (global.wsClients && global.wsClients.size > 0) {
-    const updatedOrderForPrinter = {
-      _id: existingOrder._id,
-      orderNumber: existingOrder.orderNumber,
-      tableNumber: existingOrder.tableNumber,
-      tableId: existingOrder.tableId,
-      items: [...existingOrder.items, newItem],
-      totalAmount: newTotalAmount,
-      customerNotes: existingOrder.customerNotes,
-      createdAt: existingOrder.createdAt,
-    }
-    
-    const printerMessage = JSON.stringify({
-      type: 'NEW_ORDER',
-      timestamp: new Date().toISOString(),
-      data: updatedOrderForPrinter,
-    })
-    
-    console.log('🖨️ [ADD_ITEM] Sending to printer:', newItem.name)
-    
-    global.wsClients.forEach(ws => {
-      if (ws.readyState === 1) {
-        ws.send(printerMessage)
+      case 'addItem': {
+        const { item: addItemData } = updateData
+        
+        if (!addItemData) {
+          return NextResponse.json(
+            { success: false, error: 'Ürün bilgisi gerekli' },
+            { status: 400 }
+          )
+        }
+        
+        if (!addItemData.menuItemId || !addItemData.name || !addItemData.price || !addItemData.quantity) {
+          return NextResponse.json(
+            { success: false, error: 'Ürün bilgileri eksik (menuItemId, name, price, quantity gerekli)' },
+            { status: 400 }
+          )
+        }
+        
+        if (addItemData.quantity < 1 || addItemData.quantity > 99) {
+          return NextResponse.json(
+            { success: false, error: 'Ürün miktarı 1-99 arasında olmalı' },
+            { status: 400 }
+          )
+        }
+        
+        const newItem = {
+          menuItemId: addItemData.menuItemId,
+          name: addItemData.name,
+          price: parseFloat(addItemData.price),
+          quantity: parseInt(addItemData.quantity),
+          status: 'pending',
+          addedAt: new Date(),
+          statusUpdatedAt: new Date()
+        }
+        
+        if (addItemData.notes) newItem.notes = addItemData.notes
+        if (addItemData.image) newItem.image = addItemData.image
+        if (addItemData.customizations) newItem.customizations = addItemData.customizations
+        
+        const itemTotal = newItem.price * newItem.quantity
+        const newTotalAmount = (existingOrder.totalAmount || 0) + itemTotal
+        
+        updateFields = {
+          items: [...existingOrder.items, newItem],
+          totalAmount: newTotalAmount,
+          updatedAt: new Date()
+        }
+        
+        console.log(`➕ [ADD_ITEM] Adding item to order ${id}:`, {
+          itemName: newItem.name,
+          quantity: newItem.quantity,
+          price: newItem.price,
+          itemTotal,
+          newTotalAmount
+        })
+        
+        // 🖨️ YAZICI ENTEGRASYONU - TEK ÜRÜN EKLENDİĞİNDE
+        if (global.wsClients && global.wsClients.size > 0) {
+          const printerMessage = JSON.stringify({
+            type: 'NEW_ORDER',
+            timestamp: new Date().toISOString(),
+            data: {
+              orderId: existingOrder._id.toString(),
+              orderNumber: existingOrder.orderNumber,
+              tableNumber: existingOrder.tableNumber,
+              tableId: existingOrder.tableId,
+              items: [newItem], // ✅ SADECE YENİ EKLENEN ÜRÜN
+              totalAmount: itemTotal,
+              customerNotes: `Ek sipariş - ${newItem.name}`,
+              createdAt: new Date(),
+              isAddition: true
+            },
+          })
+          
+          console.log('🖨️ [ADD_ITEM] Sending to printer:', newItem.name)
+          
+          global.wsClients.forEach(ws => {
+            if (ws.readyState === 1) {
+              ws.send(printerMessage)
+            }
+          })
+        }
+        
+        break
       }
-    })
-  }
-  
-  break
-}  // ✅ } EKLE
-
-case 'addMultipleItems': {  // ✅ { EKLE
-  const { items: multipleItems } = updateData
-  
-  if (!multipleItems || !Array.isArray(multipleItems) || multipleItems.length === 0) {
-    return NextResponse.json(
-      { success: false, error: 'Items array gerekli' },
-      { status: 400 }
-    )
-  }
-  
-  // Validate all items
-  for (const item of multipleItems) {
-    if (!item.menuItemId || !item.name || !item.price || !item.quantity) {
-      return NextResponse.json(
-        { success: false, error: 'Her ürün için menuItemId, name, price, quantity gerekli' },
-        { status: 400 }
-      )
-    }
-  }
-  
-  // Prepare new items
-  const newItems = multipleItems.map(item => ({
-    menuItemId: item.menuItemId,
-    name: item.name,
-    price: parseFloat(item.price),
-    quantity: parseInt(item.quantity),
-    image: item.image,
-    status: 'pending',
-    addedAt: new Date(),
-    statusUpdatedAt: new Date()
-  }))
-  
-  // Calculate total
-  const addedTotal = newItems.reduce((sum, item) => 
-    sum + (item.price * item.quantity), 0
-  )
-  
-  const newTotalAmount = (existingOrder.totalAmount || 0) + addedTotal
-  
-  updateFields = {
-    items: [...existingOrder.items, ...newItems],
-    totalAmount: newTotalAmount,
-    updatedAt: new Date()
-  }
-  
-  console.log(`➕ Adding ${newItems.length} items to order ${id}`)
-  
-  // 🖨️ YAZICI - TEK YAZDIRMA TÜM YENİ ÜRÜNLER İÇİN
-  if (global.wsClients && global.wsClients.size > 0) {
-    const printerMessage = JSON.stringify({
-      type: 'NEW_ORDER',
-      timestamp: new Date().toISOString(),
-      data: {
-        _id: existingOrder._id,
-        orderNumber: existingOrder.orderNumber,
-        tableNumber: existingOrder.tableNumber,
-        tableId: existingOrder.tableId,
-        items: newItems, // ✅ SADECE YENİ EKLENEN ÜRÜNLER
-        totalAmount: addedTotal,
-        customerNotes: `Ek sipariş - ${newItems.length} ürün`,
-        createdAt: new Date(),
-        isAddition: true
-      },
-    })
-    
-    console.log('🖨️ [ADD_MULTIPLE] Printing batch:', newItems.length, 'items')
-    
-    global.wsClients.forEach(ws => {
-      if (ws.readyState === 1) {
-        ws.send(printerMessage)
+      
+      case 'addMultipleItems': {
+        const { items: multipleItems } = updateData
+        
+        if (!multipleItems || !Array.isArray(multipleItems) || multipleItems.length === 0) {
+          return NextResponse.json(
+            { success: false, error: 'Items array gerekli' },
+            { status: 400 }
+          )
+        }
+        
+        // Tüm ürünleri validate et
+        for (const item of multipleItems) {
+          if (!item.menuItemId || !item.name || !item.price || !item.quantity) {
+            return NextResponse.json(
+              { success: false, error: 'Her ürün için menuItemId, name, price, quantity gerekli' },
+              { status: 400 }
+            )
+          }
+          
+          if (item.quantity < 1 || item.quantity > 99) {
+            return NextResponse.json(
+              { success: false, error: 'Her ürün miktarı 1-99 arasında olmalı' },
+              { status: 400 }
+            )
+          }
+        }
+        
+        // Yeni ürünleri hazırla
+        const newItems = multipleItems.map(item => ({
+          menuItemId: item.menuItemId,
+          name: item.name,
+          price: parseFloat(item.price),
+          quantity: parseInt(item.quantity),
+          image: item.image,
+          notes: item.notes,
+          customizations: item.customizations,
+          status: 'pending',
+          addedAt: new Date(),
+          statusUpdatedAt: new Date()
+        }))
+        
+        // Toplam tutarı hesapla
+        const addedTotal = newItems.reduce((sum, item) => 
+          sum + (item.price * item.quantity), 0
+        )
+        
+        const newTotalAmount = (existingOrder.totalAmount || 0) + addedTotal
+        
+        updateFields = {
+          items: [...existingOrder.items, ...newItems],
+          totalAmount: newTotalAmount,
+          updatedAt: new Date()
+        }
+        
+        console.log(`➕ [ADD_MULTIPLE] Adding ${newItems.length} items to order ${id}:`, {
+          itemCount: newItems.length,
+          addedTotal,
+          newTotalAmount
+        })
+        
+        // 🖨️ YAZICI ENTEGRASYONU - ÇOKLU ÜRÜN EKLENDİĞİNDE (TEK YAZDIRMA)
+        if (global.wsClients && global.wsClients.size > 0) {
+          const printerMessage = JSON.stringify({
+            type: 'NEW_ORDER',
+            timestamp: new Date().toISOString(),
+            data: {
+              orderId: existingOrder._id.toString(),
+              orderNumber: existingOrder.orderNumber,
+              tableNumber: existingOrder.tableNumber,
+              tableId: existingOrder.tableId,
+              items: newItems, // ✅ SADECE YENİ EKLENEN TÜM ÜRÜNLER
+              totalAmount: addedTotal,
+              customerNotes: `Ek sipariş - ${newItems.length} ürün`,
+              createdAt: new Date(),
+              isAddition: true,
+              isBatch: true
+            },
+          })
+          
+          console.log('🖨️ [ADD_MULTIPLE] Printing batch:', newItems.length, 'items')
+          
+          global.wsClients.forEach(ws => {
+            if (ws.readyState === 1) {
+              ws.send(printerMessage)
+            }
+          })
+        }
+        
+        break
       }
-    })
-  }
-  
-  break
-}  // ✅ } EKLE
-  const { item: addItemData } = updateData
-  
-  if (!addItemData) {
-    return NextResponse.json(
-      { success: false, error: 'Ürün bilgisi gerekli' },
-      { status: 400 }
-    )
-  }
-  
-  if (!addItemData.menuItemId || !addItemData.name || !addItemData.price || !addItemData.quantity) {
-    return NextResponse.json(
-      { success: false, error: 'Ürün bilgileri eksik (menuItemId, name, price, quantity gerekli)' },
-      { status: 400 }
-    )
-  }
-  
-  if (addItemData.quantity < 1 || addItemData.quantity > 99) {
-    return NextResponse.json(
-      { success: false, error: 'Ürün miktarı 1-99 arasında olmalı' },
-      { status: 400 }
-    )
-  }
-  
-  const newItem = {
-    menuItemId: addItemData.menuItemId,
-    name: addItemData.name,
-    price: parseFloat(addItemData.price),
-    quantity: parseInt(addItemData.quantity),
-    status: 'pending',
-    addedAt: new Date(),
-    statusUpdatedAt: new Date()
-  }
-  
-  if (addItemData.notes) newItem.notes = addItemData.notes
-  if (addItemData.image) newItem.image = addItemData.image
-  if (addItemData.customizations) newItem.customizations = addItemData.customizations
-  
-  const itemTotal = newItem.price * newItem.quantity
-  const newTotalAmount = (existingOrder.totalAmount || 0) + itemTotal
-  
-  updateFields = {
-    items: [...existingOrder.items, newItem],
-    totalAmount: newTotalAmount,
-    updatedAt: new Date()
-  }
-  
-  console.log(`➕ Adding item to order ${id}:`, {
-    itemName: newItem.name,
-    quantity: newItem.quantity,
-    price: newItem.price,
-    itemTotal,
-    newTotalAmount
-  })
-  
-  // 🖨️ YAZICI ENTEGRASYONU - ÜRÜN EKLENDİĞİNDE
-  if (global.wsClients && global.wsClients.size > 0) {
-    const updatedOrderForPrinter = {
-      _id: existingOrder._id,
-      orderNumber: existingOrder.orderNumber,
-      tableNumber: existingOrder.tableNumber,
-      tableId: existingOrder.tableId,
-      items: [...existingOrder.items, newItem],
-      totalAmount: newTotalAmount,
-      customerNotes: existingOrder.customerNotes,
-      createdAt: existingOrder.createdAt,
-    }
-    
-    const printerMessage = JSON.stringify({
-      type: 'NEW_ORDER',
-      timestamp: new Date().toISOString(),
-      data: updatedOrderForPrinter,
-    })
-    
-    console.log('🖨️ [ADD_ITEM] Sending to printer:', newItem.name)
-    
-    global.wsClients.forEach(ws => {
-      if (ws.readyState === 1) {
-        ws.send(printerMessage)
-      }
-    })
-  }
-  
-  break
-  
-      case 'removeItem':
+      
+      case 'removeItem': {
         const { itemIndex: removeIndex } = updateData
         
         if (removeIndex === undefined) {
@@ -1235,8 +1163,9 @@ case 'addMultipleItems': {  // ✅ { EKLE
         })
         
         break
+      }
 
-      case 'updateItemPaid':
+      case 'updateItemPaid': {
         const { itemOrderId: paidOrderId, itemIdx: paidIdx, isPaid } = updateData
         
         if (!paidOrderId || paidIdx === undefined || isPaid === undefined) {
@@ -1282,63 +1211,64 @@ case 'addMultipleItems': {  // ✅ { EKLE
           success: true,
           message: isPaid ? 'Ödeme alındı' : 'Ödeme iptal edildi'
         })
+      }
 
-     case 'updateItemQuantity': {
-  const { itemIndex: qtyIndex, newQuantity } = updateData
-  
-  if (qtyIndex === undefined || newQuantity === undefined) {
-    return NextResponse.json(
-      { success: false, error: 'Item index ve yeni miktar gerekli' },
-      { status: 400 }
-    )
-  }
-  
-  // ✅ 0 ise sil
-  if (newQuantity === 0 || newQuantity < 1) {
-    console.log('🗑️ Quantity is 0, removing item...')
-    
-    const removedItem = existingOrder.items[qtyIndex]
-    const newItems = existingOrder.items.filter((_, idx) => idx !== qtyIndex)
-    
-    const newTotal = newItems.reduce((sum, item) => 
-      sum + (item.price * item.quantity), 0
-    )
-    
-    updateFields = {
-      items: newItems,
-      totalAmount: newTotal,
-      updatedAt: new Date()
-    }
-    
-    console.log(`🗑️ Removed: ${removedItem.name}`)
-    break
-  }
-  
-  if (newQuantity > 99) {
-    return NextResponse.json(
-      { success: false, error: 'Miktar 99\'dan fazla olamaz' },
-      { status: 400 }
-    )
-  }
-  
-  const itemsToUpdate = [...existingOrder.items]
-  itemsToUpdate[qtyIndex].quantity = parseInt(newQuantity)
-  
-  const updatedTotal = itemsToUpdate.reduce((sum, item) => 
-    sum + (item.price * item.quantity), 0
-  )
-  
-  updateFields = {
-    items: itemsToUpdate,
-    totalAmount: updatedTotal,
-    updatedAt: new Date()
-  }
-  
-  console.log(`🔄 Updated quantity: ${existingOrder.items[qtyIndex].quantity} → ${newQuantity}`)
-  break
-}
+      case 'updateItemQuantity': {
+        const { itemIndex: qtyIndex, newQuantity } = updateData
+        
+        if (qtyIndex === undefined || newQuantity === undefined) {
+          return NextResponse.json(
+            { success: false, error: 'Item index ve yeni miktar gerekli' },
+            { status: 400 }
+          )
+        }
+        
+        // ✅ 0 ise sil
+        if (newQuantity === 0 || newQuantity < 1) {
+          console.log('🗑️ Quantity is 0, removing item...')
+          
+          const removedItem = existingOrder.items[qtyIndex]
+          const newItems = existingOrder.items.filter((_, idx) => idx !== qtyIndex)
+          
+          const newTotal = newItems.reduce((sum, item) => 
+            sum + (item.price * item.quantity), 0
+          )
+          
+          updateFields = {
+            items: newItems,
+            totalAmount: newTotal,
+            updatedAt: new Date()
+          }
+          
+          console.log(`🗑️ Removed: ${removedItem.name}`)
+          break
+        }
+        
+        if (newQuantity > 99) {
+          return NextResponse.json(
+            { success: false, error: 'Miktar 99\'dan fazla olamaz' },
+            { status: 400 }
+          )
+        }
+        
+        const itemsToUpdate = [...existingOrder.items]
+        itemsToUpdate[qtyIndex].quantity = parseInt(newQuantity)
+        
+        const updatedTotal = itemsToUpdate.reduce((sum, item) => 
+          sum + (item.price * item.quantity), 0
+        )
+        
+        updateFields = {
+          items: itemsToUpdate,
+          totalAmount: updatedTotal,
+          updatedAt: new Date()
+        }
+        
+        console.log(`🔄 Updated quantity: ${existingOrder.items[qtyIndex].quantity} → ${newQuantity}`)
+        break
+      }
 
-      case 'updateItemPartialPaid':
+      case 'updateItemPartialPaid': {
         const { itemOrderId, itemIdx, quantityPaid } = updateData
         
         if (!itemOrderId || itemIdx === undefined || !quantityPaid) {
@@ -1405,6 +1335,7 @@ case 'addMultipleItems': {  // ✅ { EKLE
           paidQuantity: newPaidQty,
           totalQuantity
         })
+      }
         
       default:
         const errors = validateOrder({ ...existingOrder, ...updateData })

@@ -2,7 +2,7 @@
 'use client'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ArrowRightLeft, AlertTriangle } from 'lucide-react'
-
+import Image from 'next/image'
 export default function TransferConfirmModal({
   show,
   sourceTable,
@@ -30,12 +30,25 @@ export default function TransferConfirmModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="p-6 bg-gradient-to-r from-purple-500 to-indigo-600 text-white">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <AlertTriangle className="w-6 h-6" />
-                </div>
+     <div className="p-6 bg-gradient-to-r from-qasa via-qasa-light to-qasa-accent text-white">
+  <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center gap-3">
+      {/* 🎨 QASA LOGO - Küçük */}
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        className="relative"
+      >
+        <div className="absolute inset-0 bg-white/20 blur-lg rounded-full" />
+        <div className="relative bg-white/10 backdrop-blur-md p-2 rounded-lg border-2 border-white/30">
+          <Image
+            src="/qasa.png"
+            alt="QASA"
+            width={60}
+            height={18}
+            className="drop-shadow-lg"
+          />
+        </div>
+      </motion.div>
                 <h3 className="text-xl font-bold">Masa Taşıma Onayı</h3>
               </div>
               <button
@@ -56,7 +69,7 @@ export default function TransferConfirmModal({
             <div className="flex items-center justify-center gap-4 mb-6">
               {/* Kaynak Masa */}
               <div className="flex-1 p-4 bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl">
-                <div className="text-xs font-medium text-amber-600 mb-1">Kaynak Masa</div>
+                <div className="text-xs font-medium text-qasa-accent mb-1">Kaynak Masa</div>
                 <div className="text-2xl font-bold text-amber-900">
                   {sourceTable.tableName || `Masa ${sourceTable.tableNumber}`}
                 </div>
@@ -89,7 +102,7 @@ export default function TransferConfirmModal({
             {/* Uyarı Mesajı */}
             <div className="p-4 bg-amber-50 border-2 border-amber-200 rounded-xl">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+                <AlertTriangle className="w-5 h-5 text-qasa-accent mt-0.5 flex-shrink-0" />
                 <div className="text-sm text-amber-900">
                   <div className="font-bold mb-1">Dikkat!</div>
                   <ul className="list-disc list-inside space-y-1 text-xs">

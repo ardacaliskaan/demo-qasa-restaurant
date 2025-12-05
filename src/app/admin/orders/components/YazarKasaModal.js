@@ -1,4 +1,4 @@
-// src/app/admin/orders/components/YazarKasaV2Modal.js
+// src/app/admin/orders/components/YazarKasaV2Modal.js - QASA BRANDED
 'use client'
 import { useState, useMemo, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -6,7 +6,7 @@ import {
   X, DollarSign, Package, CheckCircle, Clock, 
   Coffee, MessageSquare, Minus, Plus, ShoppingCart,
   CreditCard, Banknote, Smartphone, ArrowRight, Receipt,
-  AlertCircle, Users, Percent, ChevronDown // 🆕 ChevronDown eklendi
+  AlertCircle, Users, Percent, ChevronDown
 } from 'lucide-react'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
@@ -27,30 +27,27 @@ export default function YazarKasaModal({
   const [showPaymentMethodModal, setShowPaymentMethodModal] = useState(false)
   const [showConfirmCloseModal, setShowConfirmCloseModal] = useState(false)
   
-  // 🆕 Bölme ve İndirim State'leri
-  const [discountAmount, setDiscountAmount] = useState(0) // İndirim tutarı
-  const [discountPercent, setDiscountPercent] = useState(0) // İndirim yüzdesi
-  const [discountType, setDiscountType] = useState('percent') // 'percent' veya 'amount'
-  const [splitCount, setSplitCount] = useState(1) // Kaça bölünecek (1 = bölme yok)
+  // Bölme ve İndirim State'leri
+  const [discountAmount, setDiscountAmount] = useState(0)
+  const [discountPercent, setDiscountPercent] = useState(0)
+  const [discountType, setDiscountType] = useState('percent')
+  const [splitCount, setSplitCount] = useState(1)
   
-  // 🆕 Accordion state'leri
-  const [showSplitPanel, setShowSplitPanel] = useState(false) // Hesabı böl paneli açık mı?
-  const [showDiscountPanel, setShowDiscountPanel] = useState(false) // İndirim paneli açık mı?
+  // Accordion state'leri
+  const [showSplitPanel, setShowSplitPanel] = useState(false)
+  const [showDiscountPanel, setShowDiscountPanel] = useState(false)
 
-  // ✅ HOOK'LAR EARLY RETURN'DEN ÖNCE OLMALI
-  // Tüm ürünleri flatten et (order bazından ürün bazına çevir)
+  // Tüm ürünleri flatten et
   const allItems = useMemo(() => {
     if (!selectedTable) return []
     
     const items = []
     selectedTable.orders?.forEach(order => {
       order.items?.forEach((item, idx) => {
-        // Ödenen ve ödenmemiş miktarları hesapla
         const totalQuantity = item.quantity
         const paidQuantity = item.paidQuantity || 0
         const remainingQuantity = totalQuantity - paidQuantity
         
-        // HEM ödenen HEM ödenmemiş ürünleri ekle (görünüm için)
         items.push({
           orderId: order._id || order.id,
           itemIdx: idx,
@@ -84,7 +81,6 @@ export default function YazarKasaModal({
     return items
   }, [selectedTable])
 
-  // 🆕 selectedTable değiştiğinde paymentQuantities'i temizle
   useEffect(() => {
     if (selectedTable) {
       console.log('🔄 [MODAL] selectedTable updated, resetting selections')
@@ -92,7 +88,6 @@ export default function YazarKasaModal({
     }
   }, [selectedTable?.orders?.length, selectedTable?.totalAmount])
 
-  // Seçili ürünlerin toplam tutarını hesapla
   const selectedTotal = useMemo(() => {
     if (!selectedTable) return 0
     
@@ -105,7 +100,6 @@ export default function YazarKasaModal({
     }, 0)
   }, [paymentQuantities, allItems, selectedTable])
 
-  // 🆕 İndirim hesaplaması
   const discountAmountCalculated = useMemo(() => {
     if (discountPercent > 0) {
       return (selectedTotal * discountPercent) / 100
@@ -113,18 +107,15 @@ export default function YazarKasaModal({
     return discountAmount
   }, [selectedTotal, discountAmount, discountPercent])
 
-  // 🆕 İndirimli toplam
   const totalAfterDiscount = useMemo(() => {
     return Math.max(0, selectedTotal - discountAmountCalculated)
   }, [selectedTotal, discountAmountCalculated])
 
-  // 🆕 Bölünmüş tutar (kişi başı)
   const perPersonAmount = useMemo(() => {
     if (splitCount <= 1) return totalAfterDiscount
     return totalAfterDiscount / splitCount
   }, [totalAfterDiscount, splitCount])
 
-  // Toplam kalan tutar
   const totalRemaining = useMemo(() => {
     if (!selectedTable) return 0
     
@@ -133,7 +124,6 @@ export default function YazarKasaModal({
     )
   }, [allItems, selectedTable])
 
-  // Toplam ödenen tutar
   const totalPaid = useMemo(() => {
     if (!selectedTable) return 0
     
@@ -145,7 +135,6 @@ export default function YazarKasaModal({
     }, 0) || 0
   }, [selectedTable])
 
-  // 🆕 TÜM ÜRÜNLER ÖDENDİ Mİ?
   const allPaid = useMemo(() => {
     const result = allItems.every(item => item.remainingQuantity === 0 || item.isPaid)
     
@@ -166,10 +155,8 @@ export default function YazarKasaModal({
     return result
   }, [allItems])
 
-  // ✅ EARLY RETURN HOOK'LARDAN SONRA
   if (!show || !selectedTable) return null
 
-  // Miktar değiştirme
   const handleQuantityChange = (itemKey, delta) => {
     const item = allItems.find(i => `${i.orderId}-${i.itemIdx}` === itemKey)
     if (!item) return
@@ -190,7 +177,6 @@ export default function YazarKasaModal({
     })
   }
 
-  // Hızlı seçim (Tümünü seç/temizle)
   const handleQuickSelect = (itemKey, selectAll = false) => {
     const item = allItems.find(i => `${i.orderId}-${i.itemIdx}` === itemKey)
     if (!item) return
@@ -208,7 +194,6 @@ export default function YazarKasaModal({
     })
   }
 
-  // Tümünü seç
   const selectAllItems = () => {
     const newQuantities = {}
     allItems.forEach(item => {
@@ -218,18 +203,15 @@ export default function YazarKasaModal({
     setPaymentQuantities(newQuantities)
   }
 
-  // Tümünü temizle
   const clearAll = () => {
     setPaymentQuantities({})
   }
 
-  // Ödeme işlemi - önce modal aç
   const handleProcessPayment = () => {
     if (selectedTotal === 0) return
     setShowPaymentMethodModal(true)
   }
 
-  // 🆕 MASAYI KAPAT FONKSİYONU
   const handleCloseTable = async () => {
     if (!selectedTable) return
 
@@ -248,7 +230,6 @@ export default function YazarKasaModal({
       const result = await res.json()
 
       if (result.success) {
-        // 🔊 SES ÇALDIR
         const audio = new Audio('/notification.mp3')
         audio.volume = 0.7
         audio.play().catch(e => console.log('Audio play failed:', e))
@@ -258,16 +239,14 @@ export default function YazarKasaModal({
           duration: 3000
         })
         
-        // Silent refresh
         if (onComplete) {
           await onComplete(0, 'completed')
         }
         
-        // Her iki modalı da kapat
         setShowConfirmCloseModal(false)
         
         setTimeout(() => {
-          onClose() // Ana modal'ı kapat
+          onClose()
         }, 500)
       } else {
         toast.error(result.error || 'Masa kapatılamadı')
@@ -280,7 +259,6 @@ export default function YazarKasaModal({
     }
   }
 
-  // Gerçek ödeme işlemi
   const confirmPayment = async () => {
     try {
       setProcessing(true)
@@ -291,7 +269,6 @@ export default function YazarKasaModal({
       console.log('💳 Payment Method:', paymentMethod)
       console.log('📋 All Items:', allItems)
 
-      // Her seçili ürün için ödeme yap
       for (const [key, qty] of Object.entries(paymentQuantities)) {
         if (qty > 0) {
           const [orderId, itemIdx] = key.split('-')
@@ -308,7 +285,6 @@ export default function YazarKasaModal({
           })
           
           if (item) {
-            // Backend'e kısmi ödeme bilgisi gönder
             const payload = {
               id: orderId,
               action: 'updateItemPartialPaid',
@@ -340,21 +316,13 @@ export default function YazarKasaModal({
 
       console.log('✅ TÜM ÖDEMELER TAMAMLANDI')
 
-      // Toast göster
       toast.success('Ödeme işlemi tamamlandı!', { duration: 3000 })
       
-      // Seçimi temizle
       setPaymentQuantities({})
       
-      // Callback çağır (silent refresh için)
       if (onComplete) {
         await onComplete(selectedTotal, paymentMethod)
       }
-      
-      // ❌ MODAL KAPATMA - KALDIRILDI
-      // setTimeout(() => {
-      //   onClose()
-      // }, 500)
 
     } catch (error) {
       console.error('❌ Payment error:', error)
@@ -385,13 +353,25 @@ export default function YazarKasaModal({
           className="bg-white w-[95vw] h-[95vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* HEADER */}
-          <div className="flex-shrink-0 p-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
+          {/* HEADER - QASA BRANDED */}
+          <div className="flex-shrink-0 p-6 bg-gradient-to-r from-qasa via-qasa-light to-qasa-accent text-white">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-sm">
-                  <Receipt className="w-8 h-8" />
-                </div>
+                {/* 🎨 QASA LOGO */}
+               <motion.div whileHover={{ scale: 1.05, rotate: 5 }}>
+  <div className="relative bg-white/10 backdrop-blur-md p-3 rounded-2xl border-2 border-white/30">
+    <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
+    <Image
+      src="/qasa.png"
+      alt="QASA"
+      width={100}
+      height={30}
+      className="relative z-10 drop-shadow-lg brightness-0 invert opacity-90"
+      priority
+    />
+  </div>
+</motion.div>
+                
                 <div>
                   <h1 className="text-3xl font-black tracking-tight">Yazar Kasa</h1>
                   <p className="text-lg opacity-90 mt-1">
@@ -408,7 +388,7 @@ export default function YazarKasaModal({
               </button>
             </div>
 
-            {/* Quick Stats - Küçültülmüş */}
+            {/* Quick Stats - Mor Accent */}
             <div className="mt-4 grid grid-cols-3 gap-3">
               <div className="p-3 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
                 <div className="text-xs opacity-90">Toplam</div>
@@ -420,26 +400,26 @@ export default function YazarKasaModal({
                 <div className="text-xs opacity-90">Ödenen</div>
                 <div className="text-xl font-bold mt-1">₺{totalPaid.toFixed(2)}</div>
               </div>
-              <div className="p-3 bg-red-400/30 backdrop-blur-sm rounded-lg border border-red-300">
+              <div className="p-3 bg-qasa-accent/40 backdrop-blur-sm rounded-lg border border-qasa-accent">
                 <div className="text-xs opacity-90">Kalan</div>
                 <div className="text-xl font-bold mt-1">₺{totalRemaining.toFixed(2)}</div>
               </div>
             </div>
           </div>
 
-          {/* BODY - SPLIT LAYOUT - EŞİT PANELLER */}
+          {/* BODY - SPLIT LAYOUT */}
           <div className="flex-1 flex overflow-hidden">
-            {/* SOL: ÜRÜN LİSTESİ - Eşit genişlik */}
+            {/* SOL: ÜRÜN LİSTESİ */}
             <div className="flex-1 min-w-0 overflow-y-auto p-6 bg-gray-50 border-r-2 border-gray-200">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <Package className="w-6 h-6 text-emerald-600" />
+                  <Package className="w-6 h-6 text-qasa-accent" />
                   Ürünler ({allItems.length})
                 </h2>
                 <div className="flex gap-2">
                   <button
                     onClick={selectAllItems}
-                    className="px-4 py-2 bg-emerald-100 text-emerald-700 hover:bg-emerald-200 rounded-lg font-medium text-sm transition-colors"
+                    className="px-4 py-2 bg-qasa-accent/10 text-qasa-accent hover:bg-qasa-accent/20 rounded-lg font-medium text-sm transition-colors"
                   >
                     Tümünü Seç
                   </button>
@@ -452,7 +432,7 @@ export default function YazarKasaModal({
                 </div>
               </div>
 
-              {/* Ürün Kartları - Normal boyut, sadece liste dar */}
+              {/* Ürün Kartları */}
               <div className="space-y-2">
                 {allItems.map((item) => {
                   const itemKey = `${item.orderId}-${item.itemIdx}`
@@ -475,14 +455,14 @@ export default function YazarKasaModal({
                           ? 'opacity-60 cursor-not-allowed border-green-200 bg-green-50' 
                           : canSelect 
                             ? 'cursor-pointer ' + (isSelected 
-                              ? 'border-emerald-500 shadow-md ring-1 ring-emerald-300' 
-                              : 'border-gray-200 hover:border-emerald-400')
+                              ? 'border-qasa-accent shadow-md ring-1 ring-qasa-accent/30' 
+                              : 'border-gray-200 hover:border-qasa-accent/40')
                             : 'opacity-50 cursor-not-allowed border-gray-200'
                         }
                       `}
                     >
                       <div className="flex gap-3">
-                        {/* Ürün Görseli - Normal */}
+                        {/* Ürün Görseli */}
                         <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 relative">
                           {item.image ? (
                             <Image
@@ -498,7 +478,6 @@ export default function YazarKasaModal({
                             </div>
                           )}
                           
-                          {/* Ödendi Badge - Resim üzerinde */}
                           {item.isPaid && (
                             <div className="absolute inset-0 bg-green-500/90 flex items-center justify-center">
                               <CheckCircle className="w-8 h-8 text-white" />
@@ -508,14 +487,12 @@ export default function YazarKasaModal({
 
                         {/* Ürün Bilgileri */}
                         <div className="flex-1 min-w-0">
-                          {/* İsim + Fiyat */}
                           <div className="flex items-start justify-between gap-2 mb-2">
                             <div className="flex-1">
                               <h3 className="font-bold text-sm text-gray-900 line-clamp-1">
                                 {item.name}
                               </h3>
                               
-                              {/* Ödeme Durumu Badge */}
                               {item.isPaid && (
                                 <span className="inline-flex items-center gap-1 text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded mt-1">
                                   <CheckCircle className="w-3 h-3" />
@@ -528,7 +505,7 @@ export default function YazarKasaModal({
                                 </span>
                               )}
                             </div>
-                            <div className="text-base font-bold text-emerald-600 whitespace-nowrap">
+                            <div className="text-base font-bold text-qasa-accent whitespace-nowrap">
                               ₺{item.price.toFixed(2)}
                             </div>
                           </div>
@@ -550,7 +527,7 @@ export default function YazarKasaModal({
                             )}
                           </div>
 
-                          {/* Miktar kontrolleri - Sadece ödenmemiş ürünler için */}
+                          {/* Miktar kontrolleri */}
                           {canSelect && (
                             <div className="flex items-center gap-2">
                               <button
@@ -582,7 +559,7 @@ export default function YazarKasaModal({
                                     return { ...prev, [itemKey]: clamped }
                                   })
                                 }}
-                                className="w-12 text-center text-sm font-bold border border-gray-300 rounded-md py-1 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none"
+                                className="w-12 text-center text-sm font-bold border border-gray-300 rounded-md py-1 focus:border-qasa-accent focus:ring-1 focus:ring-qasa-accent outline-none"
                               />
                               <span className="text-xs text-gray-400 font-medium">/ {item.remainingQuantity}</span>
 
@@ -592,7 +569,7 @@ export default function YazarKasaModal({
                                   handleQuantityChange(itemKey, 1)
                                 }}
                                 disabled={selectedQty >= item.remainingQuantity}
-                                className="w-7 h-7 rounded-md bg-emerald-500 hover:bg-emerald-600 disabled:opacity-30 text-white flex items-center justify-center"
+                                className="w-7 h-7 rounded-md bg-qasa-accent hover:bg-qasa-accent-light disabled:opacity-30 text-white flex items-center justify-center"
                               >
                                 <Plus className="w-4 h-4" />
                               </button>
@@ -603,7 +580,7 @@ export default function YazarKasaModal({
                                     e.stopPropagation()
                                     handleQuickSelect(itemKey, true)
                                   }}
-                                  className="px-2.5 py-1 bg-emerald-500 text-white hover:bg-emerald-600 rounded-md font-bold text-xs"
+                                  className="px-2.5 py-1 bg-qasa-accent text-white hover:bg-qasa-accent-light rounded-md font-bold text-xs"
                                 >
                                   SEÇ
                                 </button>
@@ -611,25 +588,23 @@ export default function YazarKasaModal({
                             </div>
                           )}
 
-                          {/* Ödendi mesajı - Ödenen ürünler için */}
                           {item.isPaid && (
                             <div className="text-xs text-green-700 font-medium mt-2">
                               ✅ Bu ürün ödenmiştir
                             </div>
                           )}
 
-                          {/* Seçim göstergesi */}
                           {selectedQty > 0 && canSelect && (
                             <motion.div
                               initial={{ opacity: 0, height: 0 }}
                               animate={{ opacity: 1, height: 'auto' }}
-                              className="mt-2 pt-2 border-t border-emerald-200"
+                              className="mt-2 pt-2 border-t border-qasa-accent/20"
                             >
                               <div className="flex items-center justify-between text-xs">
-                                <span className="font-medium text-emerald-700">
+                                <span className="font-medium text-qasa-accent">
                                   {selectedQty} adet seçildi
                                 </span>
-                                <span className="font-bold text-emerald-600">
+                                <span className="font-bold text-qasa-accent">
                                   ₺{(item.price * selectedQty).toFixed(2)}
                                 </span>
                               </div>
@@ -653,16 +628,16 @@ export default function YazarKasaModal({
               )}
             </div>
 
-            {/* SAĞ: ÖDEME PANELİ - Eşit genişlik */}
+            {/* SAĞ: ÖDEME PANELİ */}
             <div className="flex-1 min-w-0 bg-white flex flex-col border-l-2 border-gray-300">
               {/* Ödeme Özeti */}
-              <div className="flex-1 flex flex-col p-6 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 overflow-hidden">
+              <div className="flex-1 flex flex-col p-6 bg-gradient-to-br from-qasa-accent/5 via-qasa-accent-light/5 to-qasa-accent/10 overflow-hidden">
                 <h2 className="text-xl font-black mb-4 flex items-center gap-2 text-gray-900 flex-shrink-0">
-                  <ShoppingCart className="w-6 h-6 text-emerald-600" />
+                  <ShoppingCart className="w-6 h-6 text-qasa-accent" />
                   Ödeme Özeti
                 </h2>
 
-                {/* Seçili Ürünler - Scrollable & Centered */}
+                {/* Seçili Ürünler */}
                 <div className="flex-1 flex items-center justify-center overflow-hidden">
                   <div className="w-full max-h-full overflow-y-auto pr-2">
                     {Object.entries(paymentQuantities).length === 0 ? (
@@ -685,7 +660,7 @@ export default function YazarKasaModal({
                               key={key} 
                               initial={{ opacity: 0, x: 20 }}
                               animate={{ opacity: 1, x: 0 }}
-                              className="flex items-center justify-between p-4 bg-white rounded-xl border-2 border-emerald-200 shadow-md hover:shadow-lg transition-all"
+                              className="flex items-center justify-between p-4 bg-white rounded-xl border-2 border-qasa-accent/20 shadow-md hover:shadow-lg transition-all"
                             >
                               <div className="flex-1">
                                 <div className="font-bold text-base text-gray-900">{item.name}</div>
@@ -693,7 +668,7 @@ export default function YazarKasaModal({
                                   {qty} adet × ₺{item.price.toFixed(2)}
                                 </div>
                               </div>
-                              <div className="text-xl font-black text-emerald-600">
+                              <div className="text-xl font-black text-qasa-accent">
                                 ₺{(item.price * qty).toFixed(2)}
                               </div>
                             </motion.div>
@@ -705,7 +680,7 @@ export default function YazarKasaModal({
                 </div>
               </div>
 
-              {/* Toplam - Dengeli */}
+              {/* Toplam */}
               <div className="flex-shrink-0 p-6 border-t-2 border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100">
                 {/* Ara Toplam */}
                 <div className="flex items-center justify-between mb-3">
@@ -713,9 +688,8 @@ export default function YazarKasaModal({
                   <span className="text-xl font-bold text-gray-900">₺{selectedTotal.toFixed(2)}</span>
                 </div>
 
-                {/* 🆕 HESABI BÖL - ACCORDION */}
+                {/* HESABI BÖL - ACCORDION */}
                 <div className="mb-3 pb-3 border-b border-gray-300">
-                  {/* Header - Her zaman görünür */}
                   <button
                     onClick={() => setShowSplitPanel(!showSplitPanel)}
                     className="w-full flex items-center justify-between p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -742,7 +716,6 @@ export default function YazarKasaModal({
                     </div>
                   </button>
 
-                  {/* Body - Açıldığında görünür */}
                   <AnimatePresence>
                     {showSplitPanel && (
                       <motion.div
@@ -791,9 +764,8 @@ export default function YazarKasaModal({
                   </AnimatePresence>
                 </div>
 
-                {/* 🆕 İNDİRİM UYGULA - ACCORDION */}
+                {/* İNDİRİM UYGULA - ACCORDION */}
                 <div className="mb-3 pb-3 border-b border-gray-300">
-                  {/* Header - Her zaman görünür */}
                   <button
                     onClick={() => setShowDiscountPanel(!showDiscountPanel)}
                     className="w-full flex items-center justify-between p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -820,7 +792,6 @@ export default function YazarKasaModal({
                     </div>
                   </button>
 
-                  {/* Body - Açıldığında görünür */}
                   <AnimatePresence>
                     {showDiscountPanel && (
                       <motion.div
@@ -848,7 +819,6 @@ export default function YazarKasaModal({
                             )}
                           </div>
                           
-                          {/* Toggle: Yüzde / Tutar */}
                           <div className="flex gap-2 mb-3">
                             <button
                               onClick={(e) => {
@@ -882,7 +852,6 @@ export default function YazarKasaModal({
                             </button>
                           </div>
 
-                          {/* Yüzde Seçiliyse */}
                           {discountType === 'percent' && (
                             <div className="grid grid-cols-4 gap-2">
                               {[5, 10, 15, 20].map(percent => (
@@ -905,7 +874,6 @@ export default function YazarKasaModal({
                             </div>
                           )}
 
-                          {/* Tutar Seçiliyse */}
                           {discountType === 'amount' && (
                             <div className="relative">
                               <input
@@ -938,21 +906,20 @@ export default function YazarKasaModal({
                     {discountAmountCalculated > 0 && (
                       <div className="text-sm text-gray-500 line-through mb-1">₺{selectedTotal.toFixed(2)}</div>
                     )}
-                    <span className="text-2xl font-black text-emerald-600">
+                    <span className="text-2xl font-black text-qasa-accent">
                       ₺{totalAfterDiscount.toFixed(2)}
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Ödeme Butonu - Conditional */}
+              {/* Ödeme Butonu */}
               <div className="flex-shrink-0 p-6 bg-gradient-to-br from-white to-gray-50">
                 {allPaid ? (
-                  // TÜM ÜRÜNLER ÖDENDİ - MASAYI KAPAT BUTONU
                   <button
                     onClick={() => setShowConfirmCloseModal(true)}
                     disabled={processing}
-                    className="w-full py-5 rounded-xl bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 text-white font-black text-xl hover:from-purple-600 hover:via-purple-700 hover:to-indigo-700 transition-all shadow-xl hover:shadow-purple-500/50 disabled:opacity-50"
+                    className="w-full py-5 rounded-xl bg-gradient-to-r from-qasa-accent via-qasa-accent-light to-qasa-accent text-white font-black text-xl hover:shadow-xl hover:shadow-qasa-accent/50 transition-all disabled:opacity-50"
                   >
                     {processing ? (
                       <span className="flex items-center justify-center gap-3">
@@ -973,14 +940,13 @@ export default function YazarKasaModal({
                     )}
                   </button>
                 ) : (
-                  // ÖDEME AL BUTONU (Normal)
                   <button
                     onClick={handleProcessPayment}
                     disabled={selectedTotal === 0 || processing}
                     className={`
                       w-full py-5 rounded-xl font-black text-xl transition-all transform
                       ${selectedTotal > 0 && !processing
-                        ? 'bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 hover:from-emerald-600 hover:via-emerald-700 hover:to-teal-700 text-white shadow-xl hover:shadow-emerald-500/50 hover:scale-[1.02] active:scale-[0.98]'
+                        ? 'bg-gradient-to-r from-qasa-accent via-qasa-accent-light to-qasa-accent hover:shadow-xl hover:shadow-qasa-accent/50 text-white hover:scale-[1.02] active:scale-[0.98]'
                         : 'bg-gradient-to-r from-gray-300 to-gray-400 cursor-not-allowed text-gray-500 shadow-sm'
                       }
                     `}
@@ -1028,7 +994,6 @@ export default function YazarKasaModal({
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Ödeme Yöntemi</h3>
                 <p className="text-gray-600 mb-6">Ödeme şeklini seçin</p>
 
-                {/* Yan yana 2 kolon */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   {paymentMethods.map(method => {
                     const Icon = method.icon
@@ -1061,7 +1026,7 @@ export default function YazarKasaModal({
 
                 <div className="text-center mb-6">
                   <div className="text-sm text-gray-500 mb-1">Ödenecek Tutar</div>
-                  <div className="text-4xl font-black text-emerald-600">
+                  <div className="text-4xl font-black text-qasa-accent">
                     ₺{selectedTotal.toFixed(2)}
                   </div>
                 </div>
@@ -1076,7 +1041,7 @@ export default function YazarKasaModal({
                   <button
                     onClick={confirmPayment}
                     disabled={processing}
-                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg disabled:opacity-50"
+                    className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-qasa-accent to-qasa-accent-light text-white font-bold hover:shadow-lg transition-all disabled:opacity-50"
                   >
                     {processing ? 'İşleniyor...' : 'Onayla'}
                   </button>
@@ -1086,7 +1051,7 @@ export default function YazarKasaModal({
           )}
         </AnimatePresence>
 
-        {/* 🆕 MASAYI KAPAT ONAY MODALI */}
+        {/* MASAYI KAPAT ONAY MODALI */}
         <AnimatePresence>
           {showConfirmCloseModal && (
             <motion.div
@@ -1103,8 +1068,7 @@ export default function YazarKasaModal({
                 className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Header */}
-                <div className="p-6 bg-gradient-to-r from-purple-500 to-indigo-600 text-white">
+                <div className="p-6 bg-gradient-to-r from-qasa-accent to-qasa-accent-light text-white">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
                       <AlertCircle className="w-8 h-8" />
@@ -1118,7 +1082,6 @@ export default function YazarKasaModal({
                   </div>
                 </div>
 
-                {/* Body */}
                 <div className="p-6">
                   <div className="mb-6">
                     <div className="flex items-start gap-3 p-4 bg-amber-50 border-2 border-amber-200 rounded-xl">
@@ -1136,11 +1099,10 @@ export default function YazarKasaModal({
                     </div>
                   </div>
 
-                  {/* Summary */}
-                  <div className="mb-6 p-4 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-200">
+                  <div className="mb-6 p-4 bg-gradient-to-br from-qasa-accent/10 to-qasa-accent-light/10 rounded-xl border-2 border-qasa-accent/20">
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-gray-700 font-medium">Toplam Tutar</span>
-                      <span className="text-2xl font-black text-purple-600">
+                      <span className="text-2xl font-black text-qasa-accent">
                         ₺{selectedTable?.totalAmount?.toFixed(2)}
                       </span>
                     </div>
@@ -1150,7 +1112,6 @@ export default function YazarKasaModal({
                     </div>
                   </div>
 
-                  {/* Buttons */}
                   <div className="flex gap-3">
                     <button
                       onClick={() => setShowConfirmCloseModal(false)}
@@ -1162,7 +1123,7 @@ export default function YazarKasaModal({
                     <button
                       onClick={handleCloseTable}
                       disabled={processing}
-                      className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold hover:from-purple-600 hover:to-indigo-700 transition-all shadow-lg disabled:opacity-50"
+                      className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-qasa-accent to-qasa-accent-light text-white font-bold hover:shadow-lg transition-all disabled:opacity-50"
                     >
                       {processing ? (
                         <span className="flex items-center justify-center gap-2">

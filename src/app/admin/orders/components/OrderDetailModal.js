@@ -84,12 +84,21 @@ export default function OrderDetailModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header - Sticky */}
-          <div className="flex-shrink-0 p-4 sm:p-6 bg-gradient-to-r from-amber-500 via-orange-500 to-orange-600 text-white">
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-4 flex-1">
-                <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-                  <ShoppingCart className="w-8 h-8" />
-                </div>
+      <div className="flex-shrink-0 p-4 sm:p-6 bg-gradient-to-r from-qasa via-qasa-light to-qasa-accent text-white">
+  <div className="flex items-start justify-between mb-4">
+    <div className="flex items-center gap-4 flex-1">
+      {/* 🎨 QASA LOGO */}
+<motion.div whileHover={{ scale: 1.05, rotate: -5 }}>
+  <div className="relative bg-white/10 backdrop-blur-md p-2.5 rounded-xl border-2 border-white/30">
+    <Image 
+      src="/qasa.png" 
+      alt="QASA" 
+      width={80} 
+      height={24}
+      className="brightness-0 invert opacity-90"
+    />
+  </div>
+</motion.div>
                 <div className="flex-1">
                   <h2 className="text-2xl sm:text-3xl font-bold mb-1">
                     {selectedTable.tableName || `Masa ${selectedTable.tableNumber}`}
@@ -128,7 +137,7 @@ export default function OrderDetailModal({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={onAddItem}
-                  className="p-2 sm:px-4 sm:py-2 bg-white text-amber-600 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+                  className="p-2 sm:px-4 sm:py-2 bg-white text-qasa-accent rounded-xl font-bold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
                 >
                   <Plus className="w-5 h-5" />
                   <span className="hidden sm:inline">Ürün Ekle</span>
@@ -203,7 +212,7 @@ export default function OrderDetailModal({
                       {/* Order Header */}
                       <div className="flex items-center justify-between mb-4 pb-4 border-b-2 border-gray-300">
                         <div className="flex items-center gap-3">
-                          <div className="p-2 bg-amber-500 rounded-lg">
+                          <div className="p-2 bg-qasa-accent rounded-lg">
                             <Package className="w-5 h-5 text-white" />
                           </div>
                           <div>
@@ -214,7 +223,7 @@ export default function OrderDetailModal({
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-2xl font-bold text-amber-600">₺{order.totalAmount.toFixed(2)}</div>
+                          <div className="text-2xl font-bold text-qasa-accent">₺{order.totalAmount.toFixed(2)}</div>
                         </div>
                       </div>
 
@@ -287,7 +296,7 @@ export default function OrderDetailModal({
                                 <div className="flex-1 min-w-0 pr-24">
                                   <div className="flex items-start justify-between gap-2 mb-2">
                                     <h4 className="font-bold text-gray-900 text-base sm:text-lg">{item.name}</h4>
-                                    <span className="text-lg font-bold text-amber-600 whitespace-nowrap">
+                                    <span className="text-lg font-bold text-qasa-accent whitespace-nowrap">
                                       ₺{(item.price * item.quantity).toFixed(2)}
                                     </span>
                                   </div>
@@ -309,7 +318,7 @@ export default function OrderDetailModal({
                                               <span className="font-bold text-purple-700">{sel.groupLabel}:</span> {sel.selectedLabel}
                                             </span>
                                             {sel.price > 0 && (
-                                              <span className="text-xs font-bold text-amber-600">+₺{sel.price.toFixed(2)}</span>
+                                              <span className="text-xs font-bold text-qasa-accent">+₺{sel.price.toFixed(2)}</span>
                                             )}
                                           </div>
                                         ))}
@@ -321,8 +330,8 @@ export default function OrderDetailModal({
                                   {(item.customizations?.removed?.length > 0 || item.customizations?.extras?.length > 0) && (
                                     <div className="mt-2 pt-2 border-t border-gray-200">
                                       <div className="flex items-center gap-2 mb-1">
-                                        <ChefHat className="w-4 h-4 text-amber-600" />
-                                        <span className="text-xs font-bold text-amber-600 uppercase">Özelleştirme</span>
+                                        <ChefHat className="w-4 h-4 text-qasa-accent" />
+                                        <span className="text-xs font-bold text-qasa-accent uppercase">Özelleştirme</span>
                                       </div>
                                       {item.customizations.removed?.length > 0 && (
                                         <div className="text-xs text-red-600 mb-1">
@@ -423,7 +432,7 @@ export default function OrderDetailModal({
                       {order.customerNotes && (
                         <div className="mt-4 p-3 bg-amber-50 border-2 border-amber-200 rounded-xl">
                           <div className="flex items-start gap-2">
-                            <MessageSquare className="w-5 h-5 text-amber-600 mt-0.5" />
+                            <MessageSquare className="w-5 h-5 text-qasa-accent mt-0.5" />
                             <p className="text-sm text-amber-900">{order.customerNotes}</p>
                           </div>
                         </div>
@@ -448,7 +457,7 @@ export default function OrderDetailModal({
                   {/* Toplam Özet */}
                   <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-5 border-2 border-amber-200 sticky top-4">
                     <div className="flex items-center gap-3 mb-4 pb-4 border-b-2 border-amber-200">
-                      <div className="p-2.5 bg-amber-500 rounded-xl">
+                      <div className="p-2.5 bg-qasa-accent rounded-xl">
                         <Receipt className="w-6 h-6 text-white" />
                       </div>
                       <h3 className="text-xl font-bold text-gray-900">Sipariş Özeti</h3>
@@ -472,7 +481,7 @@ export default function OrderDetailModal({
                                   {item.quantity}x {item.name}
                                 </span>
                               </div>
-                              <span className={`font-bold ${isPaid ? 'text-green-600' : 'text-amber-600'}`}>
+                              <span className={`font-bold ${isPaid ? 'text-green-600' : 'text-qasa-accent'}`}>
                                 ₺{(item.price * item.quantity).toFixed(2)}
                               </span>
                             </div>
@@ -496,7 +505,7 @@ export default function OrderDetailModal({
                         <span className="font-bold text-lg">₺{paymentStats.totalPaid.toFixed(2)}</span>
                       </div>
                       
-                      <div className="flex justify-between items-center text-amber-600">
+                      <div className="flex justify-between items-center text-qasa-accent">
                         <span className="flex items-center gap-2 font-medium">
                           <TrendingUp className="w-4 h-4" />
                           Kalan:
@@ -507,7 +516,7 @@ export default function OrderDetailModal({
                       <div className="pt-3 border-t-2 border-amber-300">
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-lg font-bold text-gray-900">Genel Toplam:</span>
-                          <span className="text-2xl font-bold text-amber-600">
+                          <span className="text-2xl font-bold text-qasa-accent">
                             ₺{selectedTable.totalAmount?.toFixed(2)}
                           </span>
                         </div>

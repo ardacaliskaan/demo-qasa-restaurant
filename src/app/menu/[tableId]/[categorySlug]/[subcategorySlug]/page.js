@@ -254,7 +254,7 @@ export default function SubcategoryProductsPage({ params }) {
                       )}
 
                       {product.featured && (
-                        <div className="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                        <div className="absolute top-3 right-3 bg-qasa-accent text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                           <Sparkles className="w-3 h-3" />
                           Özel
                         </div>
@@ -283,7 +283,7 @@ export default function SubcategoryProductsPage({ params }) {
                           </span>
                         )}
                         {product.dietaryInfo?.isGlutenFree && (
-                          <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
+                          <span className="text-xs bg-qasa-accent/20 text-amber-700 px-2 py-0.5 rounded-full font-medium">
                             🌾 Glutensiz
                           </span>
                         )}
@@ -371,7 +371,7 @@ export default function SubcategoryProductsPage({ params }) {
                     </span>
                   )}
                   {selectedProduct.dietaryInfo?.isGlutenFree && (
-                    <span className="text-sm bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-semibold">
+                    <span className="text-sm bg-qasa-accent/20 text-amber-700 px-3 py-1 rounded-full font-semibold">
                       🌾 Glutensiz
                     </span>
                   )}

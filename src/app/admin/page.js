@@ -1,4 +1,4 @@
-// src/app/admin/page.js - REAL-TIME DASHBOARD
+// src/app/admin/page.js - QASA BRANDED (NO ORANGE)
 'use client'
 import { useState, useEffect } from 'react'
 import { 
@@ -169,8 +169,9 @@ export default function AdminDashboard() {
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
           <div className="relative w-20 h-20 mx-auto mb-6">
-            <div className="absolute inset-0 border-4 border-amber-200 rounded-full animate-ping"></div>
-            <div className="absolute inset-0 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+            {/* ✅ TURUNCU KALDIRILDI → Slate */}
+            <div className="absolute inset-0 border-4 border-slate-200 rounded-full animate-ping"></div>
+            <div className="absolute inset-0 border-4 border-qasa-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Dashboard Yükleniyor</h3>
           <p className="text-gray-600">Lütfen bekleyin...</p>
@@ -208,9 +209,10 @@ export default function AdminDashboard() {
       label: 'Ortalama Süre', 
       value: stats.avgTime > 0 ? `${stats.avgTime} dk` : '-', 
       icon: Clock, 
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-100',
-      textColor: 'text-orange-600'
+      // ✅ TURUNCU KALDIRILDI → Slate
+      color: 'from-slate-500 to-slate-600',
+      bgColor: 'bg-slate-100',
+      textColor: 'text-slate-600'
     },
     { 
       label: 'Aktif Siparişler', 
@@ -240,9 +242,10 @@ export default function AdminDashboard() {
       label: 'Menü Ürünleri', 
       value: stats.totalMenuItems, 
       icon: ChefHat, 
-      color: 'from-amber-500 to-amber-600',
-      bgColor: 'bg-amber-100',
-      textColor: 'text-amber-600'
+      // ✅ TURUNCU KALDIRILDI → İndigo (ama display'de QASA accent kullanılıyor)
+      color: 'from-indigo-500 to-indigo-600',
+      bgColor: 'bg-qasa-accent/20',
+      textColor: 'text-qasa-accent'
     },
   ]
 
@@ -253,7 +256,8 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2">
+              {/* ✅ TURUNCU GRADİENT KALDIRILDI → Siyah */}
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 Dashboard
               </h1>
               <p className="text-gray-600 text-sm flex items-center gap-2">
@@ -279,10 +283,11 @@ export default function AdminDashboard() {
                 <RefreshCw className="w-5 h-5" />
               </button>
 
+              {/* ✅ GRADIENT DÜZELTİLDİ + Slate kullanıldı */}
               <button
                 onClick={loadDashboardData}
                 disabled={refreshing}
-                className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl hover:shadow-lg transition-all flex items-center gap-2 font-medium disabled:opacity-50"
+                className="px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl hover:shadow-lg transition-all flex items-center gap-2 font-medium disabled:opacity-50"
               >
                 <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
                 <span className="hidden sm:inline">Yenile</span>
@@ -303,7 +308,7 @@ export default function AdminDashboard() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border-2 border-gray-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300"
+                className="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border-2 border-gray-200 hover:border-qasa-accent hover:shadow-xl transition-all duration-300"
               >
                 <div className="flex items-center justify-between">
                   <div>
@@ -329,7 +334,7 @@ export default function AdminDashboard() {
           <div className="p-4 sm:p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                <Package className="w-5 h-5 text-amber-600" />
+                <Package className="w-5 h-5 text-qasa-accent" />
                 Son Siparişler
               </h2>
               <span className="text-sm text-gray-500">
@@ -379,7 +384,7 @@ export default function AdminDashboard() {
                         </div>
                       </td>
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-bold text-amber-600">
+                        <div className="text-sm font-bold text-qasa-accent">
                           ₺{(order.totalAmount || 0).toFixed(2)}
                         </div>
                       </td>
@@ -424,11 +429,12 @@ export default function AdminDashboard() {
             <p className="text-xs text-gray-500 mt-1">Masa yönetimi</p>
           </a>
 
+          {/* ✅ TURUNCU KALDIRILDI → QASA Accent */}
           <a
             href="/admin/menu"
-            className="bg-white p-6 rounded-2xl shadow-sm border-2 border-gray-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300 text-center group"
+            className="bg-white p-6 rounded-2xl shadow-sm border-2 border-gray-200 hover:border-qasa-accent hover:shadow-xl transition-all duration-300 text-center group"
           >
-            <ChefHat className="w-8 h-8 text-amber-600 mx-auto mb-3 group-hover:scale-110 transition-transform" />
+            <ChefHat className="w-8 h-8 text-qasa-accent mx-auto mb-3 group-hover:scale-110 transition-transform" />
             <h3 className="font-semibold text-gray-900">Menü</h3>
             <p className="text-xs text-gray-500 mt-1">Ürün yönetimi</p>
           </a>

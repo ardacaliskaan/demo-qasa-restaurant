@@ -1482,7 +1482,7 @@ export default function TablesPage() {
                                 </div>
                               ) : (
                                 <div className="w-full aspect-square rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center mb-2">
-                                  <Coffee className="w-8 h-8 text-amber-600" />
+                                  <Coffee className="w-8 h-8 text-qasa-accent" />
                                 </div>
                               )}
 
@@ -1528,7 +1528,7 @@ export default function TablesPage() {
                                 </div>
                               ) : (
                                 <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center flex-shrink-0">
-                                  <Coffee className="w-10 h-10 text-amber-600" />
+                                  <Coffee className="w-10 h-10 text-qasa-accent" />
                                 </div>
                               )}
                               <div className="flex-1">

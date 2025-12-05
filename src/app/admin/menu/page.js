@@ -392,7 +392,7 @@ export default function AdminMenuPage() {
         <div className="text-center">
           <div className="relative w-20 h-20 mx-auto mb-6">
             <div className="absolute inset-0 border-4 border-amber-200 rounded-full animate-ping"></div>
-            <div className="absolute inset-0 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="absolute inset-0 border-4 border-qasa-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Menü Yükleniyor</h3>
           <p className="text-gray-600">Lütfen bekleyin...</p>
@@ -439,7 +439,7 @@ export default function AdminMenuPage() {
                 placeholder="Ürün ara..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all text-base"
+                className="w-full pl-12 pr-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-qasa-accent transition-all text-base"
               />
               {searchTerm && (
                 <button
@@ -508,8 +508,8 @@ export default function AdminMenuPage() {
                 <p className="text-gray-600 text-xs font-medium">Toplam</p>
                 <p className="text-2xl font-bold text-gray-900">{menuItems.length}</p>
               </div>
-              <div className="bg-amber-100 p-2.5 rounded-lg">
-                <Package className="w-5 h-5 text-amber-600" />
+              <div className="bg-qasa-accent/20 p-2.5 rounded-lg">
+                <Package className="w-5 h-5 text-qasa-accent" />
               </div>
             </div>
           </div>
@@ -673,10 +673,10 @@ export default function AdminMenuPage() {
                 {/* Content */}
                 <div className="p-4">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold text-gray-800 text-base sm:text-lg leading-tight group-hover:text-amber-600 transition-colors line-clamp-1">
+                    <h3 className="font-bold text-gray-800 text-base sm:text-lg leading-tight group-hover:text-qasa-accent transition-colors line-clamp-1">
                       {item.name}
                     </h3>
-                    <span className="text-lg sm:text-xl font-bold text-amber-600 whitespace-nowrap ml-2">
+                    <span className="text-lg sm:text-xl font-bold text-qasa-accent whitespace-nowrap ml-2">
                       ₺{(parseFloat(item.price) || 0).toFixed(2)}
                     </span>
                   </div>
@@ -687,7 +687,7 @@ export default function AdminMenuPage() {
 
                   {/* Category Info */}
                   <div className="flex items-center space-x-2 mb-3">
-                    <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs rounded-full font-medium">
+                    <span className="px-2 py-0.5 bg-qasa-accent/20 text-amber-700 text-xs rounded-full font-medium">
                       {item.category?.name}
                     </span>
                     {item.subcategory && (
@@ -777,7 +777,7 @@ export default function AdminMenuPage() {
                         onClick={() => setActiveTab(tab.id)}
                         className={`flex items-center space-x-2 py-3 sm:py-4 border-b-2 transition-colors whitespace-nowrap ${
                           activeTab === tab.id
-                            ? 'border-amber-500 text-amber-600'
+                            ? 'border-qasa-accent text-qasa-accent'
                             : 'border-transparent text-gray-500 hover:text-gray-700'
                         }`}
                       >
@@ -951,7 +951,7 @@ export default function AdminMenuPage() {
                             type="button"
                             onClick={() => handleFormChange('available', !formData.available)}
                             className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                              formData.available ? 'bg-amber-500' : 'bg-gray-300'
+                              formData.available ? 'bg-qasa-accent' : 'bg-gray-300'
                             }`}
                           >
                             <span
@@ -1023,11 +1023,11 @@ export default function AdminMenuPage() {
                         : formData.ingredients.filter(id => id !== ingredient.id)
                       handleFormChange('ingredients', newIngredients)
                     }}
-                    className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                    className="rounded border-gray-300 text-qasa-accent focus:ring-amber-500"
                   />
                   <span className="text-xs sm:text-sm text-gray-700">{ingredient.name}</span>
                   {ingredient.extraPrice > 0 && (
-                    <span className="text-xs text-amber-600">
+                    <span className="text-xs text-qasa-accent">
                       (+₺{ingredient.extraPrice.toFixed(2)})
                     </span>
                   )}
@@ -1234,7 +1234,7 @@ export default function AdminMenuPage() {
         {ingredients.filter(ing => ing.extraPrice > 0).map(ingredient => (
           <label
             key={ingredient.id}
-            className="flex items-center justify-between p-2 sm:p-3 bg-amber-50 rounded-lg hover:bg-amber-100 cursor-pointer"
+            className="flex items-center justify-between p-2 sm:p-3 bg-amber-50 rounded-lg hover:bg-qasa-accent/20 cursor-pointer"
           >
             <div className="flex items-center space-x-2">
               <input
@@ -1252,11 +1252,11 @@ export default function AdminMenuPage() {
                     extras: newExtras
                   })
                 }}
-                className="rounded border-gray-300 text-amber-600 focus:ring-amber-500"
+                className="rounded border-gray-300 text-qasa-accent focus:ring-amber-500"
               />
               <span className="text-xs sm:text-sm text-gray-700">{ingredient.name}</span>
             </div>
-            <span className="text-xs sm:text-sm font-medium text-amber-600">
+            <span className="text-xs sm:text-sm font-medium text-qasa-accent">
               +₺{ingredient.extraPrice.toFixed(2)}
             </span>
           </label>

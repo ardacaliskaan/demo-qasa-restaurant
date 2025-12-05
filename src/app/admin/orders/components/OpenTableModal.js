@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { apiPath } from '@/lib/api'
-
+import Image from 'next/image'
 export default function OpenTableModal({
   show,
   onClose,
@@ -246,12 +246,25 @@ export default function OpenTableModal({
           onClick={(e) => e.stopPropagation()}
         >
           {/* HEADER */}
-          <div className="flex-shrink-0 p-4 sm:p-6 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-600 text-white">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-                  <Coffee className="w-8 h-8" />
-                </div>
+          <div className="flex-shrink-0 p-4 sm:p-6 bg-gradient-to-r from-qasa via-qasa-light to-qasa-accent text-white">
+  <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center gap-4">
+      {/* 🎨 QASA LOGO */}
+      <motion.div
+        whileHover={{ scale: 1.05, rotate: -3 }}
+        className="relative"
+      >
+        <div className="absolute inset-0 bg-white/20 blur-xl rounded-full" />
+        <div className="relative bg-white/10 backdrop-blur-md p-3 rounded-2xl border-2 border-white/30">
+          <Image
+            src="/qasa.png"
+            alt="QASA"
+            width={90}
+            height={27}
+            className="drop-shadow-lg"
+          />
+        </div>
+      </motion.div>
                 <div>
                   <h2 className="text-2xl sm:text-3xl font-bold">Masa Aç</h2>
                   <p className="text-sm opacity-90 mt-1">

@@ -34,7 +34,7 @@ export default function AdminIngredientsPage() {
     { value: 'dairy', label: 'Süt Ürünleri', color: 'bg-yellow-100 text-yellow-700' },
     { value: 'vegetable', label: 'Sebze', color: 'bg-green-100 text-green-700' },
     { value: 'fruit', label: 'Meyve', color: 'bg-orange-100 text-orange-700' },
-    { value: 'grain', label: 'Tahıl', color: 'bg-amber-100 text-amber-700' },
+    { value: 'grain', label: 'Tahıl', color: 'bg-qasa-accent/20 text-amber-700' },
     { value: 'spice', label: 'Baharat', color: 'bg-purple-100 text-purple-700' },
     { value: 'sauce', label: 'Sos', color: 'bg-pink-100 text-pink-700' },
     { value: 'other', label: 'Diğer', color: 'bg-slate-100 text-slate-700' }

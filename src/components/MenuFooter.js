@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  GraduationCap, Tag, Heart, Coffee, Instagram, 
+  GraduationCap, Tag, Coffee, Instagram, 
   MessageCircle, X, Send, Star, Sparkles, AlertCircle, Users, Utensils
 } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -15,33 +15,17 @@ export default function MenuFooter() {
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  const mottos = [
-    {
-      icon: GraduationCap,
-      title: "Öğrenci Dostu",
-      description: "Özel fiyatlarla her zaman yanınızdayız"
-    },
-    {
-      icon: Tag,
-      title: "Kampanyanın Tek Adresi",
-      description: "Her gün yeni fırsatlar"
-    },
-    {
-      icon: Heart,
-      title: "Karabükte Düzenli İkramın Tek Adresi",
-      description: "Sürekli ikramlarımızla sizi mutlu ediyoruz"
-    }
-  ]
+
 
   const feedbackCategories = [
     {
       id: 'service',
       label: 'Hizmet Kalitesi',
       icon: Sparkles,
-      color: 'from-blue-500 to-cyan-600',
-      bgColor: 'bg-blue-50',
-      borderColor: 'border-blue-200',
-      textColor: 'text-blue-700'
+      color: 'from-qasa-accent to-qasa-accent-light',
+      bgColor: 'bg-qasa-accent/10',
+      borderColor: 'border-qasa-accent',
+      textColor: 'text-qasa-accent'
     },
     {
       id: 'food',
@@ -56,10 +40,10 @@ export default function MenuFooter() {
       id: 'staff',
       label: 'Personel',
       icon: Users,
-      color: 'from-purple-500 to-pink-600',
-      bgColor: 'bg-purple-50',
-      borderColor: 'border-purple-200',
-      textColor: 'text-purple-700'
+      color: 'from-blue-500 to-cyan-600',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-200',
+      textColor: 'text-blue-700'
     },
     {
       id: 'other',
@@ -122,11 +106,9 @@ export default function MenuFooter() {
 
       console.log('📥 Response status:', response.status)
       
-      // Response'u text olarak al
       const responseText = await response.text()
       console.log('📥 Response text:', responseText)
       
-      // JSON parse et
       let data
       try {
         data = JSON.parse(responseText)
@@ -138,18 +120,20 @@ export default function MenuFooter() {
       console.log('📥 Parsed data:', data)
 
       if (response.ok && data.success) {
-        toast.success('Görüşünüz için teşekkür ederiz! 💚', {
+        toast.success('Görüşünüz için teşekkür ederiz! 💜', {
           duration: 4000,
-          icon: '✨'
+          icon: '✨',
+          style: {
+            background: '#A855F7',
+            color: '#fff'
+          }
         })
         
-        // Reset form
         setSelectedCategory('')
         setRating(0)
         setMessage('')
         setShowFeedbackModal(false)
       } else {
-        // API'den gelen hata mesajını göster
         toast.error(data.error || data.message || 'Bir hata oluştu')
         console.error('❌ API Error:', data)
       }
@@ -163,33 +147,8 @@ export default function MenuFooter() {
 
   return (
     <>
-      <footer className="relative z-10 mt-16 border-t border-emerald-200 bg-white/80 backdrop-blur-md">
+      <footer className="relative z-10 mt-16 border-t border-gray-200 bg-white/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 py-12">
-          {/* Mottos Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            {mottos.map((motto, index) => {
-              const IconComponent = motto.icon
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex flex-col items-center text-center"
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-                    <IconComponent className="w-7 h-7 text-white" />
-                  </div>
-                  <h3 className="text-lg font-bold text-emerald-900 mb-2">
-                    {motto.title}
-                  </h3>
-                  <p className="text-sm text-emerald-600 font-medium">
-                    {motto.description}
-                  </p>
-                </motion.div>
-              )
-            })}
-          </div>
 
           {/* FEEDBACK CTA BUTTON */}
           <motion.div
@@ -198,22 +157,22 @@ export default function MenuFooter() {
             transition={{ delay: 0.4 }}
             className="mb-12"
           >
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-6 md:p-8 border-2 border-emerald-200 shadow-sm">
+            <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl p-6 md:p-8 border-2 border-gray-200 shadow-sm">
               <div className="text-center max-w-2xl mx-auto">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: 0.5, type: "spring" }}
-                  className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full mb-4 shadow-lg"
+                  className="inline-flex items-center justify-center w-16 h-16 bg-qasa-accent rounded-full mb-4 shadow-lg"
                 >
                   <MessageCircle className="w-8 h-8 text-white" />
                 </motion.div>
                 
-                <h3 className="text-xl md:text-3xl font-bold text-emerald-900 mb-3">
+                <h3 className="text-xl md:text-3xl font-bold text-gray-900 mb-3">
                   Müşteri Bizim Doktorumuzdur
                 </h3>
                 
-                <p className="text-emerald-700 mb-6 text-sm md:text-base px-4">
+                <p className="text-gray-700 mb-6 text-sm md:text-base px-4">
                   Görüş, öneri ve şikayetleriniz bizim için çok değerli. 
                   Hizmetlerimizi geliştirmemize yardımcı olun.
                 </p>
@@ -222,7 +181,7 @@ export default function MenuFooter() {
                   onClick={() => setShowFeedbackModal(true)}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 mx-auto text-sm md:text-base"
+                  className="bg-qasa-accent hover:bg-qasa-accent-light text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 mx-auto text-sm md:text-base"
                 >
                   <MessageCircle className="w-5 h-5" />
                   Görüş Bildir
@@ -232,17 +191,17 @@ export default function MenuFooter() {
           </motion.div>
 
           {/* Divider */}
-          <div className="border-t border-emerald-200 my-8"></div>
+          <div className="border-t border-gray-200 my-8"></div>
 
           {/* Bottom Section */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Logo & Copyright */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-qasa-accent rounded-xl flex items-center justify-center">
                 <Coffee className="w-6 h-6 text-white" />
               </div>
-              <div className="text-emerald-800">
-                <p className="font-bold text-lg">QASA CAFE</p>
+              <div className="text-gray-900">
+                <p className="font-bold text-lg">QASA</p>
               </div>
             </div>
 
@@ -258,10 +217,10 @@ export default function MenuFooter() {
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.1, y: -3 }}
                     whileTap={{ scale: 0.9 }}
-                    className="w-10 h-10 bg-emerald-100 hover:bg-emerald-200 rounded-xl flex items-center justify-center transition-colors duration-200"
+                    className="w-10 h-10 bg-qasa-accent/10 hover:bg-qasa-accent/20 rounded-xl flex items-center justify-center transition-colors duration-200"
                     aria-label={social.label}
                   >
-                    <IconComponent className="w-5 h-5 text-emerald-700" />
+                    <IconComponent className="w-5 h-5 text-qasa-accent" />
                   </motion.a>
                 )
               })}
@@ -282,10 +241,9 @@ export default function MenuFooter() {
                 href="https://ardacaliskan.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                className="text-qasa-accent hover:text-qasa-accent-light font-medium transition-colors"
               >
-                Arda Çalışkan
-              </a>
+c              </a>
             </p>
           </motion.div>
         </div>
@@ -310,7 +268,7 @@ export default function MenuFooter() {
               className="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-gradient-to-r from-emerald-600 to-teal-600 p-4 sm:p-6 rounded-t-3xl z-10">
+              <div className="sticky top-0 bg-qasa-accent p-4 sm:p-6 rounded-t-3xl z-10">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -318,7 +276,7 @@ export default function MenuFooter() {
                     </div>
                     <div className="text-white">
                       <h2 className="text-lg sm:text-2xl font-bold">Görüş Bildir</h2>
-                      <p className="text-xs sm:text-sm text-emerald-100">Anonim ve güvenli</p>
+                      <p className="text-xs sm:text-sm text-white/80">Anonim ve güvenli</p>
                     </div>
                   </div>
                   <button
@@ -418,7 +376,7 @@ export default function MenuFooter() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Görüş, öneri veya şikayetinizi buraya yazabilirsiniz..."
-                    className="w-full h-32 sm:h-40 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none transition-all"
+                    className="w-full h-32 sm:h-40 border-2 border-gray-300 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-qasa-accent focus:border-qasa-accent resize-none transition-all"
                     maxLength={1000}
                   />
                   <div className="flex items-center justify-between mt-2">
@@ -432,14 +390,14 @@ export default function MenuFooter() {
                 </div>
 
                 {/* Privacy Notice */}
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 sm:p-4">
+                <div className="bg-qasa-accent/10 border border-qasa-accent/30 rounded-xl p-3 sm:p-4">
                   <div className="flex gap-3">
-                    <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <AlertCircle className="w-5 h-5 text-qasa-accent flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-blue-900 mb-1">
+                      <p className="text-sm font-medium text-gray-900 mb-1">
                         Gizlilik ve Güvenlik
                       </p>
-                      <p className="text-xs text-blue-700">
+                      <p className="text-xs text-gray-700">
                         Geri bildiriminiz tamamen anonimdir. Hiçbir kişisel bilginiz kaydedilmez.
                       </p>
                     </div>
@@ -456,7 +414,7 @@ export default function MenuFooter() {
                     w-full py-4 rounded-xl font-semibold shadow-lg transition-all duration-200 flex items-center justify-center gap-2
                     ${submitting || !selectedCategory || !message.trim()
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:shadow-xl'
+                      : 'bg-qasa-accent hover:bg-qasa-accent-light text-white hover:shadow-xl'
                     }
                   `}
                 >

@@ -102,15 +102,15 @@ const [newAddItemTable, setNewAddItemTable] = useState(null)
 
   // ==================== STATUS CONFIG ====================
   
-  const statusConfig = {
-    pending: { label: 'Bekliyor', color: 'yellow', icon: Clock, gradient: 'from-yellow-400 to-orange-500' },
-    confirmed: { label: 'Onaylandı', color: 'blue', icon: CheckCircle, gradient: 'from-blue-500 to-indigo-600' },
-    preparing: { label: 'Hazırlanıyor', color: 'blue', icon: Activity, gradient: 'from-blue-500 to-indigo-600' },
-    ready: { label: 'Hazır', color: 'green', icon: CheckCircle, gradient: 'from-green-500 to-emerald-600' },
-    delivered: { label: 'Teslim Edildi', color: 'purple', icon: Package, gradient: 'from-purple-500 to-pink-600' },
-    completed: { label: 'Tamamlandı', color: 'gray', icon: CheckCircle, gradient: 'from-gray-500 to-gray-600' },
-    cancelled: { label: 'İptal', color: 'red', icon: Activity, gradient: 'from-red-500 to-red-600' }
-  }
+const statusConfig = {
+   pending: { label: 'Bekliyor', color: 'teal', icon: Clock, gradient: 'from-teal-500 to-teal-600' },
+  confirmed: { label: 'Onaylandı', color: 'blue', icon: CheckCircle, gradient: 'from-blue-500 to-indigo-600' },
+  preparing: { label: 'Hazırlanıyor', color: 'blue', icon: Activity, gradient: 'from-blue-500 to-indigo-600' },
+  ready: { label: 'Hazır', color: 'green', icon: CheckCircle, gradient: 'from-green-500 to-emerald-600' },
+  delivered: { label: 'Teslim Edildi', color: 'purple', icon: Package, gradient: 'from-purple-500 to-pink-600' },
+  completed: { label: 'Tamamlandı', color: 'gray', icon: CheckCircle, gradient: 'from-gray-500 to-gray-600' },
+  cancelled: { label: 'İptal', color: 'red', icon: Activity, gradient: 'from-red-500 to-red-600' }
+}
 
   // ==================== EFFECTS ====================
   
@@ -914,10 +914,10 @@ const handleTableOpened = async (table) => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
-          <div className="relative w-20 h-20 mx-auto mb-6">
-            <div className="absolute inset-0 border-4 border-amber-200 rounded-full animate-ping"></div>
-            <div className="absolute inset-0 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
+<div className="relative w-20 h-20 mx-auto mb-6">
+  <div className="absolute inset-0 border-4 border-slate-200 rounded-full animate-ping"></div>
+  <div className="absolute inset-0 border-4 border-qasa-accent border-t-transparent rounded-full animate-spin"></div>
+</div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Siparişler Yükleniyor</h3>
           <p className="text-gray-600">Lütfen bekleyin...</p>
         </div>
@@ -935,11 +935,11 @@ const handleTableOpened = async (table) => {
       />
 
       {/* Header */}
-      <div className={`sticky top-0 z-30 ${
-        fullScreenMode 
-          ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white' 
-          : 'bg-white/95 backdrop-blur-md border-b border-gray-200'
-      } shadow-sm`}>
+<div className={`sticky top-0 z-30 ${
+  fullScreenMode 
+    ? 'bg-slate-700 text-white' 
+    : 'bg-white/95 backdrop-blur-md border-b border-gray-200'
+} shadow-sm`}>
         <div className="p-4 sm:p-6">
           {fullScreenMode ? (
             <div className="flex items-center justify-between">
@@ -974,7 +974,7 @@ const handleTableOpened = async (table) => {
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-                    <ShoppingCart className="w-7 h-7 text-amber-600" />
+                    <ShoppingCart className="w-7 h-7 text-qasa-accent" />
                     Sipariş Yönetimi
                     {refreshing && (
                       <RefreshCw className="w-5 h-5 text-blue-500 animate-spin" />
@@ -1079,7 +1079,7 @@ onClick={() => setShowNewOpenTableModal(true)}
                   {/* Refresh */}
                   <button
                     onClick={loadOrders}
-                    className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl hover:shadow-lg transition-all flex items-center gap-2 font-medium"
+  className="px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl hover:shadow-lg transition-all flex items-center gap-2 font-medium"
                   >
                     <RefreshCw className="w-4 h-4" />
                     <span className="hidden sm:inline">Yenile</span>
@@ -1146,7 +1146,7 @@ onClick={() => setShowNewOpenTableModal(true)}
               <Clock className="w-5 h-5" />
               <span className="font-medium">Siparişler 5 saniyede bir otomatik yenileniyor</span>
             </div>
-            <div className="flex items-center gap-2 text-amber-600 text-sm">
+            <div className="flex items-center gap-2 text-qasa-accent text-sm">
               <span>ESC tuşu ile çıkış</span>
             </div>
           </div>
@@ -1161,9 +1161,9 @@ onClick={() => setShowNewOpenTableModal(true)}
             animate={{ opacity: 1, scale: 1 }}
             className="text-center py-20 bg-white rounded-2xl shadow-sm"
           >
-            <div className="w-24 h-24 bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Package className="w-12 h-12 text-amber-600" />
-            </div>
+<div className="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center mx-auto mb-6">
+  <Package className="w-12 h-12 text-qasa-accent" />
+</div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">Aktif Sipariş Yok</h3>
             <p className="text-gray-600 mb-6">
               {filterStatus !== 'all' || searchTerm 
@@ -1229,7 +1229,7 @@ onClick={() => setShowNewOpenTableModal(true)}
         setSelectedTable(table)
         setShowModal(true)
       }}
-      className="bg-white rounded-2xl shadow-sm border-2 border-gray-200 hover:border-amber-300 transition-all duration-300 hover:shadow-xl overflow-hidden cursor-pointer"
+className="bg-white rounded-2xl shadow-sm border-2 border-gray-200 hover:border-qasa-accent transition-all duration-300 hover:shadow-xl overflow-hidden cursor-pointer"
     >
       <div className={`p-4 bg-gradient-to-r ${statusConfig[table.status]?.gradient || 'from-gray-400 to-gray-600'}`}>
         <div className="flex items-center justify-between text-white">
@@ -1292,22 +1292,21 @@ onClick={() => setShowNewOpenTableModal(true)}
             </div>
           </div>
         )}
-
-        {table.customerNotes && (
-          <div className="mb-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
-            <div className="flex items-start gap-2">
-              <MessageSquare className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-amber-900 line-clamp-2">{table.customerNotes}</p>
-            </div>
-          </div>
-        )}
+{table.customerNotes && (
+  <div className="mb-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+    <div className="flex items-start gap-2">
+      <MessageSquare className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+      <p className="text-sm text-blue-900 line-clamp-2">{table.customerNotes}</p>
+    </div>
+  </div>
+)}
 
         <div className="space-y-2">
           {table.orders?.slice(0, 2).map((order) => (
             <div key={order.id} className="p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs text-gray-500">#{order.orderNumber?.slice(-6) || order.id.slice(-6)}</span>
-                <span className="text-sm font-bold text-amber-600">₺{order.totalAmount.toFixed(2)}</span>
+                <span className="text-sm font-bold text-qasa-accent">₺{order.totalAmount.toFixed(2)}</span>
               </div>
               <div className="text-sm text-gray-700">
                 {order.items?.map((item, idx) => {

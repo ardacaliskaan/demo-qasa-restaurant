@@ -1,8 +1,20 @@
 @import "tailwindcss";
 
+/* ==================== QASA COLOR VARIABLES ==================== */
 :root {
+  /* Default theme */
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* QASA Primary Colors */
+  --qasa-dark: #131925;        /* Ana koyu lacivert */
+  --qasa-light: #1e2a3b;       /* Açık lacivert */
+  --qasa-accent: #A855F7;      /* Mor accent */
+  --qasa-accent-light: #C084FC; /* Açık mor */
+  
+  /* Gradients */
+  --qasa-gradient: linear-gradient(135deg, #131925 0%, #A855F7 100%);
+  --qasa-gradient-hover: linear-gradient(135deg, #1e2a3b 0%, #C084FC 100%);
 }
 
 @theme inline {
@@ -10,21 +22,81 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* 🎨 QASA COLORS - Tailwind'de kullanmak için */
+  --color-qasa: #131925;
+  --color-qasa-light: #1e2a3b;
+  --color-qasa-accent: #A855F7;
+  --color-qasa-accent-light: #C084FC;
 }
 
+/* ==================== DARK MODE (devre dışı) ==================== */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Dark mode'u override et - her zaman light theme */
+    --background: #ffffff;
+    --foreground: #171717;
   }
 }
 
+/* ==================== BASE STYLES ==================== */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-/* Browser autofill override */
+
+/* ==================== CUSTOM SCROLLBAR (QASA THEMED) ==================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--qasa-accent);
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--qasa-accent-light);
+}
+
+/* ==================== SCROLLBAR HIDE UTILITY ==================== */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==================== CUSTOM SCROLLBAR CLASS ==================== */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--qasa-accent);
+}
+
+/* ==================== BROWSER AUTOFILL OVERRIDE ==================== */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -59,44 +131,175 @@ textarea::placeholder {
   color: #9CA3AF !important;
   opacity: 1 !important;
 }
-.siyah-yazi{
-  color:black;
-}
-/* ================================================
-   🎨 SCROLLBAR HIDE UTILITY
-   Bu kodu globals.css dosyanıza ekleyin
-   ================================================ */
 
-/* Horizontal scroll için scrollbar gizle (kategori butonları için) */
-.scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+.siyah-yazi {
+  color: black;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari, Opera */
+/* ==================== QASA CUSTOM ANIMATIONS ==================== */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
 }
 
-/* ================================================
-   🎯 BONUS: Custom Scrollbar (isteğe bağlı)
-   Diğer scroll alanları için
-   ================================================ */
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+.shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    to right,
+    var(--qasa-dark) 0%,
+    var(--qasa-accent) 50%,
+    var(--qasa-dark) 100%
+  );
+  background-size: 1000px 100%;
 }
 
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
+@keyframes scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+.scan-line {
+  animation: scan 2s ease-in-out infinite;
 }
 
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+.glitch {
+  animation: glitch 0.3s infinite;
+}
+
+@keyframes shimmer-loader {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer-loader 2s infinite;
+}
+
+/* ==================== QASA GLOW EFFECTS ==================== */
+.qasa-glow {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.qasa-glow-hover:hover {
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+}
+
+.qasa-text-glow {
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* ==================== QASA GRADIENT BACKGROUNDS ==================== */
+.bg-qasa-gradient {
+  background: var(--qasa-gradient);
+}
+
+.bg-qasa-gradient-hover:hover {
+  background: var(--qasa-gradient-hover);
+}
+
+/* ==================== QASA CARD STYLES ==================== */
+.qasa-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.qasa-card:hover {
+  border-color: var(--qasa-accent);
+  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.15);
+  transform: translateY(-2px);
+}
+
+/* ==================== QASA BUTTON STYLES ==================== */
+.btn-qasa {
+  background: var(--qasa-dark);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-qasa:hover {
+  background: var(--qasa-light);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-qasa-accent {
+  background: var(--qasa-accent);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-qasa-accent:hover {
+  background: var(--qasa-accent-light);
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ==================== QASA BADGE STYLES ==================== */
+.badge-qasa {
+  background: var(--qasa-accent);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ==================== SMOOTH TRANSITIONS ==================== */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==================== FOCUS STYLES ==================== */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--qasa-accent);
+  outline-offset: 2px;
 }

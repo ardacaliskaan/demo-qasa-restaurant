@@ -266,7 +266,7 @@ export default function CategoriesAdminPage() {
                   isExpanded ? (
                     <FolderOpen className="w-8 h-8 text-amber-500" />
                   ) : (
-                    <Folder className="w-8 h-8 text-amber-600" />
+                    <Folder className="w-8 h-8 text-qasa-accent" />
                   )
                 ) : (
                   <div className="w-8 h-8 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg flex items-center justify-center">
@@ -300,7 +300,7 @@ export default function CategoriesAdminPage() {
                     </span>
                   )}
                   {level > 0 && (
-                    <span className="px-2 py-1 bg-amber-100 text-amber-600 text-xs rounded-full font-medium">
+                    <span className="px-2 py-1 bg-qasa-accent/20 text-qasa-accent text-xs rounded-full font-medium">
                       Alt Kategori
                     </span>
                   )}
@@ -312,7 +312,7 @@ export default function CategoriesAdminPage() {
                   <span className="text-xs text-gray-500">Slug: {category.slug}</span>
                   <span className="text-xs text-gray-500">Sıra: {category.sortOrder}</span>
                   {hasChildren && (
-                    <span className="text-xs text-amber-600 font-medium">
+                    <span className="text-xs text-qasa-accent font-medium">
                       {category.children.length} alt kategori
                     </span>
                   )}
@@ -326,7 +326,7 @@ export default function CategoriesAdminPage() {
               {level === 0 && (
                 <button
                   onClick={() => openAddModal('sub', category)}
-                  className="p-2 hover:bg-amber-50 text-amber-600 rounded-lg transition-colors group"
+                  className="p-2 hover:bg-qasa-accent/10 text-qasa-accent rounded-lg transition-colors group"
                   title="Alt kategori ekle"
                 >
                   <Plus className="w-4 h-4 group-hover:scale-110 transition-transform" />
@@ -436,8 +436,8 @@ export default function CategoriesAdminPage() {
               <p className="text-gray-600 text-sm font-medium">Toplam Kategori</p>
               <p className="text-3xl font-bold text-gray-900">{flatCategories.length}</p>
             </div>
-            <div className="bg-amber-100 p-3 rounded-lg">
-              <Folder className="w-6 h-6 text-amber-600" />
+            <div className="bg-qasa-accent/20 p-3 rounded-lg">
+              <Folder className="w-6 h-6 text-qasa-accent" />
             </div>
           </div>
         </div>
@@ -611,7 +611,7 @@ export default function CategoriesAdminPage() {
                     type="button"
                     onClick={() => handleFormChange('isActive', !formData.isActive)}
                     className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      formData.isActive ? 'bg-amber-500' : 'bg-gray-300'
+                      formData.isActive ? 'bg-qasa-accent' : 'bg-gray-300'
                     }`}
                   >
                     <span
